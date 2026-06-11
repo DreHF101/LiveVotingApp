@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://api.qrserver.com; connect-src 'self' https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Live Voting — Funkytown Showcase 2026 v50</title>
+  <title>Live Voting — Funkytown Showcase 2026 v51</title>
   <meta name="description" content="Live audience voting for Funkytown Showcase 2026 — score your favourite acts in real time.">
   <meta name="theme-color" content="#080808">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3064,10 +3064,17 @@ const c=type==='ok'?'var(--green)':type==='err'?'var(--red)':type==='info'?'var(
 // SECURITY: After testing, go to Realtime Database → Rules and paste:
 // {
 //   "rules": {
-//     "votes": { ".read": true, ".write": "auth != null" },
-//     "control": { ".read": true, ".write": "auth != null" }
+//     "events": {
+//       "$eventCode": {
+//         "votes":   { ".read": true, ".write": "auth != null" },
+//         "control": { ".read": true, ".write": "auth != null" },
+//         "chat":    { ".read": true, ".write": "auth != null" }
+//       }
+//     }
 //   }
 // }
+// NOTE: data is stored under events/{EVENT_CODE}/votes|control|chat — the
+// rules MUST nest under "events" > "$eventCode" to match the actual paths.
 // ═══════════════════════════════════════════════════════════════════════════
 
 const FIREBASE_CONFIG = {
@@ -3181,32 +3188,35 @@ function _buildFirebaseDataSdk() {
     },
     // Subscribe to real-time updates.
     // handler may be a plain function OR an object with .onDataChanged() (dataHandler pattern).
+    // FIX: votes and control fire on separate listeners; cache both and always
+    // invoke with the MERGED array so dataHandler.onDataChanged receives a
+    // combined dataset (votes + control record) on every update.  Previously
+    // each listener called invoke() independently, so when control fired,
+    // allVotes was wiped to [], and when votes fired, controlRecord was lost.
     subscribe(handler) {
-      const invoke = (data) => {
-        if (typeof handler === 'function') handler(data);
-        else if (handler && typeof handler.onDataChanged === 'function') handler.onDataChanged(data);
+      let _cachedVotes = [];
+      let _cachedCtrl  = null;
+      const invoke = () => {
+        const combined = _cachedCtrl ? [..._cachedVotes, _cachedCtrl] : [..._cachedVotes];
+        if (typeof handler === 'function') handler(combined);
+        else if (handler && typeof handler.onDataChanged === 'function') handler.onDataChanged(combined);
       };
       // Listen to all votes
       const votesListener = _fbVotesRef.on('value', snap => {
-        const votes = [];
+        _cachedVotes = [];
         snap.forEach(child => {
           const v = child.val();
-          if (v) votes.push({ ...v, _fbKey: child.key });
+          if (v) _cachedVotes.push({ ...v, _fbKey: child.key });
         });
-        allVotes = votes;
-        computeTallies();
-        updateTallies();
-        invoke(votes);
+        invoke();
       });
       // Listen to manager control state (for audience devices)
       const ctrlListener = _fbCtrlRef.on('value', snap => {
         const ctrl = snap.val();
-        if (ctrl && typeof ctrl.ticket_id === 'string') {
-          try {
-            const flags = JSON.parse(ctrl.ticket_id);
-            invoke([{ ...ctrl, _isControl: true, ...flags }]);
-          } catch(e) {}
-        }
+        // Keep the raw Firebase record (performer_id: -1) so dataHandler
+        // can identify it via the performer_id === -1 check.
+        _cachedCtrl = (ctrl && ctrl.performer_id === -1) ? ctrl : null;
+        invoke();
       });
       _fbUnsubVotes = () => _fbVotesRef.off('value', votesListener);
       _fbUnsubCtrl  = () => _fbCtrlRef.off('value', ctrlListener);
@@ -3260,11 +3270,12 @@ async function createVote(obj){
   if(HAS_SDK){
     try{
       // BUG-3 FIX: check for existing vote and UPDATE instead of creating a second row
+      // FIX: Firebase records use _fbKey (not .id) — was always creating duplicates
       const existing=allVotes.find(v=>v.performer_id===obj.performer_id&&v.ticket_id===obj.ticket_id);
-      if(existing&&existing.id){
+      if(existing&&existing._fbKey){
         const merged={...existing,...obj};
         const r=await window.dataSdk.update(merged);
-        if(r&&r.isOk){const idx=allVotes.findIndex(v=>v.id===existing.id);if(idx>=0)allVotes[idx]=r.data||merged;computeTallies();updateTallies();}
+        if(r&&r.isOk){const idx=allVotes.findIndex(v=>v._fbKey===existing._fbKey);if(idx>=0)allVotes[idx]=r.data||merged;computeTallies();updateTallies();}
         return r||{isOk:false};
       }
       return await window.dataSdk.create(obj);
@@ -9043,7 +9054,7 @@ _initV16Patches();
     };
   }
 
-  console.log('[Judge Module v50] Loaded. Judge mode:', isJudgeModeEnabled(), '| IS_JUDGE:', IS_JUDGE);
+  console.log('[Judge Module v51] Loaded. Judge mode:', isJudgeModeEnabled(), '| IS_JUDGE:', IS_JUDGE);
 })();
 
 
