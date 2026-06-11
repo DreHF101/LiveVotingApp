@@ -1,2 +1,0 @@
-# LiveVotingApp
-Funkytown Showcase App
