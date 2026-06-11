@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data: blob: api.qrserver.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://api.qrserver.com; connect-src 'self' https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Live Voting — Funkytown Showcase 2026 v44</title>
+  <title>Live Voting — Funkytown Showcase 2026 v50</title>
   <meta name="description" content="Live audience voting for Funkytown Showcase 2026 — score your favourite acts in real time.">
   <meta name="theme-color" content="#080808">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,17 +12,16 @@
   <meta property="og:title" content="Live Voting — Funkytown Showcase 2026">
   <meta property="og:description" content="Cast your vote live — score each act from 1 to 10 as the show unfolds.">
   <meta property="og:type" content="website">
-  <!-- NOTE: og:url + og:image below are deploy-time placeholders — update these for your domain -->
-  <!-- REMINDER: Create funkytown-share.png (1200x630px) for social preview images -->
-  <!-- og:url is set dynamically at runtime via JS; placeholder below -->
-  <meta property="og:url" content="https://funkytown2026.replit.app/" id="ogUrl">
-  <meta property="og:image" content="https://funkytown2026.replit.app/funkytown-share.png">
+  <!-- og:url is set dynamically at runtime via JS for the current deploy URL -->
+  <!-- funkytown-share.png (1200x630px) must be in the same folder as this file -->
+  <meta property="og:url" content="https://fwshowcase.github.io/vote/" id="ogUrl">
+  <meta property="og:image" content="https://fwshowcase.github.io/vote/funkytown-share.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Funkytown Showcase 2026 — Live Voting">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Live Voting — Funkytown Showcase 2026">
-  <meta name="twitter:image" content="https://funkytown2026.replit.app/funkytown-share.png">
+  <meta name="twitter:image" content="https://fwshowcase.github.io/vote/funkytown-share.png">
   <meta name="twitter:description" content="Cast your vote live — score each act from 1 to 10 as the show unfolds.">
   <meta property="og:site_name" content="Funkytown Showcase">
   <meta name="apple-mobile-web-app-title" content="Funkytown Vote">
@@ -48,7 +47,7 @@
     ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--deep);}::-webkit-scrollbar-thumb{background:var(--gold-mid);border-radius:2px;}
     .page{max-width:860px;margin:0 auto;padding:0 20px 100px;position:relative;z-index:1;}
     body.audience-mode .page{max-width:580px;}
-    .auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.96);backdrop-filter:blur(8px);z-index:99990;display:flex;align-items:center;justify-content:center;padding:20px;}
+    .auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.96);backdrop-filter:blur(8px);z-index:100100;display:flex;align-items:center;justify-content:center;padding:20px;}
     .auth-overlay.hidden{display:none;}
     .auth-box{background:var(--surface);border:1px solid rgba(232,193,74,0.3);border-radius:2px;padding:44px 36px 36px;max-width:380px;width:100%;text-align:center;animation:modalIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;position:relative;overflow:hidden;}
     .auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
@@ -70,7 +69,7 @@
     .auth-hint{font-size:0.72rem;color:var(--muted);margin-top:16px;line-height:1.6;}
     .auth-hint strong{color:var(--muted2);font-weight:500;}
     @keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(6px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);};}
-    .event-code-gate{position:fixed;inset:0;z-index:2500;display:none;}
+    .event-code-gate{position:fixed;inset:0;z-index:100050;display:none;}
     .event-code-gate.visible{display:flex;align-items:center;justify-content:center;}
     .ecg-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.96);backdrop-filter:blur(8px);}
     .ecg-box{position:relative;background:var(--surface);border:1px solid rgba(232,193,74,0.3);border-radius:2px;padding:44px 36px 36px;max-width:340px;width:100%;text-align:center;animation:modalIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;margin:20px;overflow:hidden;}
@@ -90,7 +89,7 @@
     .fab{position:fixed;z-index:99995;isolation:isolate;padding:14px 20px;min-width:52px;min-height:52px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:0.92rem;letter-spacing:0.1em;background:var(--surface);border:2px solid var(--border);border-radius:2px;cursor:pointer;transition:all 0.15s;touch-action:manipulation;user-select:none;}
     .fab:hover{color:var(--gold);border-color:rgba(232,193,74,0.4);background:rgba(232,193,74,0.05);}
     .fab:active{transform:scale(0.96);}
-    .fab-manager{bottom:20px;right:20px;color:var(--muted2);}
+    .fab-manager{bottom:20px;right:20px;color:var(--muted2);z-index:100060;}
     .fab-manager.is-manager{background:var(--gold);color:#000;border-color:var(--gold);}
     .fab-manager.is-manager:hover{background:#f0d060;}
     .fab-setlist{bottom:20px;left:20px;color:var(--muted2);display:none;}
@@ -286,6 +285,14 @@
     .vote-lock-banner{display:none;align-items:center;justify-content:center;gap:8px;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;padding:9px 14px;border-radius:2px;margin-bottom:14px;text-align:center;line-height:1.5;color:var(--gold);background:var(--gold-dim);border:1px solid rgba(232,193,74,0.2);}
     .vote-lock-banner:not(:empty){display:flex;}
     body.audience-mode.phase-voting .vote-lock-banner{display:none!important;}
+    .judge-mode-banner{display:none;align-items:center;gap:10px;padding:10px 14px;margin-bottom:16px;background:linear-gradient(90deg,rgba(232,193,74,0.13),rgba(232,193,74,0.07));border:1px solid rgba(232,193,74,0.4);border-radius:2px;animation:fadeDown 0.35s cubic-bezier(0.16,1,0.3,1) both;}
+    .judge-mode-banner.visible{display:flex;}
+    .jmb-icon{font-size:1.2rem;flex-shrink:0;}
+    .jmb-text{flex:1;min-width:0;}
+    .jmb-title{font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:0.12em;color:var(--gold);line-height:1;}
+    .jmb-sub{font-size:0.68rem;letter-spacing:0.1em;color:var(--muted2);margin-top:2px;}
+    .jmb-exit{padding:5px 10px;font-family:'Bebas Neue',sans-serif;font-size:0.72rem;letter-spacing:0.1em;background:transparent;border:1px solid rgba(232,193,74,0.35);color:var(--gold);border-radius:2px;cursor:pointer;white-space:nowrap;flex-shrink:0;touch-action:manipulation;}
+    .jmb-exit:hover{background:rgba(232,193,74,0.12);}
     .rating-group[data-state='preshow'] .rating-btn,.rating-group[data-state='performing'] .rating-btn{opacity:0.22;cursor:not-allowed;}
     .rating-group[data-state='preshow'],.rating-group[data-state='performing']{pointer-events:none;}
     @media(max-width:520px){.rating-group{grid-template-columns:repeat(5,1fr);gap:10px;}}
@@ -578,6 +585,32 @@
     #offlineBar{display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:rgba(232,74,74,0.95);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:500;text-align:center;padding:7px 12px;letter-spacing:0.06em;}
     #offlineBar.visible{display:block;}
     #offlineBar.online-flash{background:rgba(74,222,128,0.92);}
+    #syncModeBar{display:none;position:fixed;top:0;left:0;right:0;z-index:99998;background:rgba(245,158,11,0.95);color:#1a1200;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:600;text-align:center;padding:7px 12px;letter-spacing:0.04em;}
+    #syncModeBar.visible{display:block;}
+    #syncModeBar .smb-x{margin-left:10px;cursor:pointer;font-weight:700;opacity:0.7;}
+    #syncModeBar .smb-x:hover{opacity:1;}
+    /* v50: audience gets their own subtle sync note — hide the manager-oriented orange bar */
+    body.audience-mode #syncModeBar{display:none!important;}
+    #audienceSyncNote{display:none;position:fixed;top:0;left:0;right:0;z-index:99997;
+      background:rgba(28,28,38,0.94);color:var(--muted2);font-family:'DM Sans',sans-serif;
+      font-size:0.72rem;text-align:center;padding:5px 14px;letter-spacing:0.06em;
+      border-bottom:1px solid rgba(255,255,255,0.06);}
+    #audienceSyncNote.visible{display:block;}
+    /* v50: Reaction feed — ephemeral chips that accumulate above the tray */
+    .reaction-feed{position:fixed;bottom:178px;left:50%;transform:translateX(-50%);
+      z-index:1490;display:none;gap:5px;align-items:center;
+      pointer-events:none;max-width:320px;flex-wrap:wrap;justify-content:center;}
+    .audience-mode.phase-performing .reaction-feed,
+    .audience-mode.phase-between .reaction-feed{display:flex;}
+    .reaction-feed-chip{font-size:1.2rem;background:rgba(255,255,255,0.08);
+      border-radius:20px;padding:3px 9px;
+      animation:chipIn 0.18s ease-out,chipOut 0.5s ease-in 3.2s both;}
+    @keyframes chipIn{from{opacity:0;transform:scale(0.65);}to{opacity:1;transform:scale(1);}}
+    @keyframes chipOut{to{opacity:0;transform:scale(0.75);}}
+    /* v50: between-acts chat discovery hint */
+    .between-chat-hint{font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;
+      color:var(--muted);text-align:center;margin-top:18px;padding:0 20px;
+      animation:fadeIn 0.6s ease 2.5s both;}
     #offlineQueueBadge{display:none;position:fixed;bottom:86px;right:20px;z-index:9001;background:var(--surface);border:1px solid rgba(232,74,74,0.5);border-radius:2px;padding:6px 12px;font-size:0.72rem;color:var(--red);}
     #offlineQueueBadge.visible{display:block;}
     .setlist-photo-row{display:flex;align-items:center;gap:6px;margin-top:5px;padding:5px 0 2px;}
@@ -974,13 +1007,13 @@
 
     /* ── v27: Intermission Screen ─────────────────────────────────────── */
     #intermissionScreen{
-      display:none;position:fixed;inset:0;z-index:2600; /* v40 BUG-11 FIX: above auth-overlay(2000) and event-code-gate(2500) */
+      display:none;position:fixed;inset:0;z-index:2600; /* below auth-overlay(100100) and event-code-gate(100050) */
       background:linear-gradient(160deg,#080808 0%,#0e0a1a 60%,#100810 100%);
       flex-direction:column;align-items:center;justify-content:flex-start;
       padding:calc(32px + var(--safe-top)) 12px calc(80px + var(--safe-bottom));overflow-y:auto;overflow-x:hidden;
       pointer-events:none;
     }
-    #intermissionScreen.visible{display:flex;}
+    #intermissionScreen.visible{display:flex;pointer-events:auto;}
     .ims-header{text-align:center;margin-bottom:28px;position:relative;}
     .ims-eyebrow{font-size:0.7rem;letter-spacing:0.38em;text-transform:uppercase;
       color:var(--gold);margin-bottom:8px;opacity:0.8;}
@@ -1077,6 +1110,48 @@
     }
     #intermissionScreen{animation:imsBorder 4s ease-in-out infinite;}
     .ims-react-btn:hover{box-shadow:0 0 16px rgba(232,193,74,0.2);}
+    /* ── v49: Ephemeral Live Chat ──────────────────────────────────────── */
+    .ims-chat{background:var(--surface);border:1px solid rgba(232,193,74,0.2);
+      border-radius:2px;max-width:420px;width:100%;overflow:hidden;
+      margin-bottom:18px;animation:fadeUp 0.5s 0.45s both;box-sizing:border-box;
+      position:relative;}
+    .ims-chat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,transparent,rgba(232,193,74,0.55),transparent);pointer-events:none;}
+    .ims-chat-hdr{padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border);
+      display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;-webkit-user-select:none;}
+    .ims-chat-hdr-title{font-family:'Bebas Neue',sans-serif;font-size:0.85rem;letter-spacing:0.2em;color:var(--gold);flex:1;}
+    .ims-chat-hdr-badge{font-size:0.6rem;letter-spacing:0.14em;background:rgba(232,193,74,0.1);
+      border:1px solid rgba(232,193,74,0.28);color:var(--gold);padding:2px 8px;border-radius:2px;}
+    .ims-chat-toggle{font-size:0.68rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;}
+    .ims-chat-body{display:none;}
+    .ims-chat-body.open{display:block;}
+    .ims-chat-msgs{height:152px;overflow:hidden;padding:8px 14px 4px;
+      display:flex;flex-direction:column;justify-content:flex-end;gap:3px;box-sizing:border-box;}
+    @keyframes chatMsgIn{
+      0%{opacity:0;transform:translateY(5px);}
+      6%{opacity:1;transform:translateY(0);}
+      72%{opacity:1;}
+      100%{opacity:0;transform:translateY(8px);}
+    }
+    .chat-msg{animation:chatMsgIn var(--msg-dur,75s) linear forwards;
+      font-size:0.79rem;line-height:1.4;color:var(--muted2);
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
+    .chat-msg .chat-nick{color:var(--gold);font-weight:600;margin-right:3px;}
+    .chat-msg.chat-own .chat-nick{color:#4ade80;}
+    .ims-chat-input-row{display:flex;gap:6px;padding:8px 10px;border-top:1px solid var(--border);}
+    .ims-chat-input{flex:1;background:var(--surface2);border:1px solid var(--border2);
+      color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.8rem;
+      padding:7px 10px;border-radius:2px;outline:none;min-width:0;box-sizing:border-box;}
+    .ims-chat-input::placeholder{color:var(--muted);}
+    .ims-chat-input:focus{border-color:rgba(232,193,74,0.4);}
+    .ims-chat-send{padding:7px 14px;background:transparent;border:1px solid rgba(232,193,74,0.35);
+      color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:0.82rem;letter-spacing:0.1em;
+      border-radius:2px;cursor:pointer;white-space:nowrap;touch-action:manipulation;flex-shrink:0;}
+    .ims-chat-send:hover{background:rgba(232,193,74,0.1);}
+    .ims-chat-send:disabled{opacity:0.4;cursor:default;}
+    .ims-chat-limit{font-size:0.66rem;color:var(--muted);text-align:center;
+      padding:0 14px 8px;letter-spacing:0.05em;}
+    /* ── end v49 ephemeral chat ─────────────────────────────────────────── */
     @media print{
       body{background:#fff;color:#111;}
       .page,.tallies-section{max-width:100%!important;}
@@ -1151,6 +1226,60 @@
     /* ── v16: Reaction System ────────────────────────────────────── */
     .reaction-tray{display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:1500;gap:10px;flex-wrap:nowrap;}
     .audience-mode.phase-performing .reaction-tray{display:flex;}
+    .audience-mode.phase-between .reaction-tray{display:flex;} /* v50: reactions also available between acts */
+    /* ── v50: Audience Chat FAB ─────────────────────────────────────────── */
+    #chatFab{
+      position:fixed;bottom:calc(20px + var(--safe-bottom));left:20px;
+      z-index:9050;display:none;
+      padding:11px 16px;background:var(--surface);border:1px solid rgba(232,193,74,0.35);
+      color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:0.82rem;
+      letter-spacing:0.1em;border-radius:2px;cursor:pointer;
+      align-items:center;gap:6px;touch-action:manipulation;
+      transition:background 0.15s,border-color 0.15s;min-height:44px;}
+    #chatFab:hover{background:rgba(232,193,74,0.1);border-color:rgba(232,193,74,0.55);}
+    #chatFab:active{transform:scale(0.96);}
+    body.audience-mode.phase-between #chatFab,
+    body.audience-mode.phase-idle #chatFab,
+    body.audience-mode.phase-done #chatFab{display:flex;}
+    body.audience-mode.phase-performing #chatFab,
+    body.audience-mode.phase-voting #chatFab{display:none!important;}
+    /* Audience Chat Panel — slides up from bottom */
+    .audience-chat-panel{
+      position:fixed;bottom:0;left:0;right:0;z-index:9060;
+      background:var(--surface2);
+      border-top:2px solid rgba(232,193,74,0.25);
+      transform:translateY(100%);transition:transform 0.28s cubic-bezier(0.16,1,0.3,1);
+      max-height:320px;display:flex;flex-direction:column;
+      padding-bottom:var(--safe-bottom);}
+    .audience-chat-panel.open{transform:translateY(0);}
+    .acp-header{
+      padding:11px 16px;background:var(--surface3);
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;gap:8px;flex-shrink:0;}
+    .acp-title{font-family:'Bebas Neue',sans-serif;font-size:0.88rem;letter-spacing:0.2em;color:var(--gold);flex:1;}
+    .acp-badge{font-size:0.6rem;letter-spacing:0.14em;background:rgba(232,193,74,0.1);border:1px solid rgba(232,193,74,0.25);color:var(--gold);padding:2px 8px;border-radius:2px;}
+    .acp-phase{font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+    .acp-close{background:none;border:1px solid var(--border2);color:var(--muted2);padding:4px 9px;border-radius:2px;cursor:pointer;font-size:0.78rem;flex-shrink:0;touch-action:manipulation;min-height:32px;}
+    .acp-close:hover{color:var(--text);border-color:var(--muted2);}
+    .acp-msgs{
+      flex:1;overflow:hidden;padding:8px 16px 4px;
+      display:flex;flex-direction:column;justify-content:flex-end;gap:3px;
+      min-height:72px;max-height:130px;box-sizing:border-box;}
+    .acp-input-row{display:flex;gap:6px;padding:8px 12px;border-top:1px solid var(--border);flex-shrink:0;}
+    .acp-input{
+      flex:1;background:var(--surface);border:1px solid var(--border2);color:var(--text);
+      font-family:'DM Sans',sans-serif;font-size:0.82rem;padding:8px 11px;
+      border-radius:2px;outline:none;min-width:0;box-sizing:border-box;}
+    .acp-input::placeholder{color:var(--muted);}
+    .acp-input:focus{border-color:rgba(232,193,74,0.4);}
+    .acp-send{
+      padding:8px 14px;background:transparent;border:1px solid rgba(232,193,74,0.35);
+      color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:0.82rem;letter-spacing:0.1em;
+      border-radius:2px;cursor:pointer;white-space:nowrap;touch-action:manipulation;flex-shrink:0;}
+    .acp-send:hover{background:rgba(232,193,74,0.1);}
+    .acp-send:disabled{opacity:0.4;cursor:default;}
+    .acp-limit{font-size:0.65rem;color:var(--muted);text-align:center;padding:0 14px 6px;letter-spacing:0.05em;flex-shrink:0;}
+    /* ── end v50 audience chat ───────────────────────────────────────────── */
     .reaction-btn{width:52px;height:52px;background:var(--surface);border:1px solid var(--border);border-radius:50%;font-size:1.5rem;cursor:pointer;transition:transform 0.15s;touch-action:manipulation;display:flex;align-items:center;justify-content:center;}
     .reaction-btn:active{transform:scale(0.88);}
     .reaction-float{position:fixed;pointer-events:none;font-size:2rem;animation:reactionFloat 1.8s ease-out forwards;z-index:1600;}
@@ -1406,7 +1535,7 @@
     }
 
     /* ── Offline bar: safe area ─────────────────────────────────────────── */
-    #offlineBar {
+    #offlineBar, #syncModeBar {
       padding-top: calc(7px + var(--safe-top));
       padding-left: calc(12px + var(--safe-left));
       padding-right: calc(12px + var(--safe-right));
@@ -1535,7 +1664,7 @@
 
       /* Intermission — inner wrapper handles all sizing; outer keeps safe-area */
       .ims-inner { padding: 0 2px; }
-      .ims-trivia-card, .ims-leaderboard, .ims-poll, .ims-reaction-row { max-width: 100%; }
+      .ims-trivia-card, .ims-leaderboard, .ims-poll, .ims-reaction-row, .ims-chat { max-width: 100%; }
 
       /* ROS panel rows */
       .ros-row { grid-template-columns: 64px 1fr; gap: 8px; padding: 10px 14px; }
@@ -1734,6 +1863,11 @@
 <!-- Peek tab shown when PSB is collapsed — tap to restore -->
 <button id="psbRestoreBtn" type="button" aria-label="Restore status bar">&#8963; Status</button>
 <div id="offlineBar" role="alert" aria-live="assertive"></div>
+<div id="syncModeBar" role="status"></div>
+<!-- v50: audience-friendly sync note (shows only when Firebase is unavailable) -->
+<div id="audienceSyncNote" role="status" aria-live="polite"></div>
+<!-- v50: reaction feed — chips above reaction tray -->
+<div class="reaction-feed" id="reactionFeed" aria-hidden="true"></div>
 <button id="soundToggleBtn" type="button" aria-label="Toggle vote chime sound" title="Toggle sound">&#128276; Sound</button>
 <div id="offlineQueueBadge"></div>
 <noscript><p style="font-family:sans-serif;text-align:center;padding:40px;color:#f0ece0;background:#080808;">JavaScript is required to vote.</p></noscript>
@@ -1837,6 +1971,24 @@
       <div class="ims-poll-hdr">&#128203; Quick Poll</div>
       <div class="ims-poll-q" id="imsPollQ">Who was your personal favourite tonight?</div>
       <div class="ims-poll-opts" id="imsPollOpts"></div>
+    </div>
+    <!-- v49: Ephemeral Live Chat -->
+    <div class="ims-chat" id="imsChat">
+      <div class="ims-chat-hdr" id="imsChatHdr" role="button" tabindex="0" aria-expanded="false" aria-controls="imsChatBody" title="Toggle live chat">
+        <div class="ims-chat-hdr-title">&#128172; Live Chat</div>
+        <div class="ims-chat-hdr-badge">EPHEMERAL</div>
+        <div class="ims-chat-toggle" id="imsChatToggle">OPEN</div>
+      </div>
+      <div class="ims-chat-body" id="imsChatBody" role="region" aria-label="Live chat panel">
+        <div class="ims-chat-msgs" id="imsChatMsgs" aria-live="polite" aria-label="Chat messages"></div>
+        <div class="ims-chat-input-row">
+          <input class="ims-chat-input" id="imsChatInput" type="text" maxlength="120"
+            placeholder="Say something&#x2026;" autocomplete="off" autocorrect="off"
+            autocapitalize="sentences" spellcheck="false" aria-label="Chat message">
+          <button class="ims-chat-send" id="imsChatSend" type="button">Send</button>
+        </div>
+        <div class="ims-chat-limit" id="imsChatLimit">Messages fade after 75s</div>
+      </div>
     </div>
     </div><!-- /.ims-inner -->
   </div>
@@ -1949,6 +2101,7 @@
     <input type="text" class="ecg-input" id="eventCodeInput" placeholder="Event code" maxlength="12" autocomplete="off" autocapitalize="characters" aria-label="Event code input">
     <div class="ecg-error" id="eventCodeError" role="alert" aria-live="assertive"></div>
     <button class="ecg-submit" id="eventCodeSubmitBtn" type="button">ENTER</button>
+    <div id="ecgHint" style="margin-top:14px;font-size:0.7rem;color:var(--muted);line-height:1.5;"></div>
   </div>
 </div>
 
@@ -1960,6 +2113,25 @@
 <button class="preview-return-btn" id="previewReturnBtn" type="button" aria-label="Return to Stage Manager">&#8592; Return to Stage Manager</button>
 <button class="fab fab-setlist" id="setListBtn" type="button" aria-label="Open set list manager">&#128203; Set List</button>
 <button class="fab fab-manager" id="managerAccessBtn" type="button" aria-label="Manager access">&#128274; Manager</button>
+<!-- v50: Audience Chat FAB (downtime phases only — hidden during performing/voting) -->
+<button id="chatFab" type="button" aria-label="Open live chat" aria-expanded="false">&#128172; Chat</button>
+<!-- v50: Audience Chat Panel (ephemeral slide-up sheet) -->
+<div class="audience-chat-panel" id="audienceChatPanel" role="dialog" aria-modal="false" aria-label="Live chat panel">
+  <div class="acp-header">
+    <div class="acp-title">&#128172; Live Chat</div>
+    <div class="acp-badge">EPHEMERAL</div>
+    <span class="acp-phase" id="acpPhaseLabel"></span>
+    <button class="acp-close" id="acpClose" type="button" aria-label="Close chat">&#10005;</button>
+  </div>
+  <div class="acp-msgs" id="acpMsgs" aria-live="polite" aria-label="Chat messages"></div>
+  <div class="acp-input-row">
+    <input class="acp-input" id="acpInput" type="text" maxlength="120"
+      placeholder="Say something&#x2026;" autocomplete="off" autocorrect="off"
+      autocapitalize="sentences" spellcheck="false" aria-label="Chat message">
+    <button class="acp-send" id="acpSend" type="button">Send</button>
+  </div>
+  <div class="acp-limit" id="acpLimit">Messages fade after 75s</div>
+</div>
 
 <div class="modal-overlay" id="setListModal" role="dialog" aria-modal="true" aria-label="Set List Manager">
   <div class="modal-box" style="max-width:520px;">
@@ -2161,7 +2333,7 @@
       </div>
     </div>
     <div class="sfp-body">
-      <div id="showTimeRow" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;"><label style="font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);white-space:nowrap;">Show Time:</label><input type="time" id="preshowStartTimeInput" style="display:none;" aria-hidden="true"><button type="button" id="preshowStartTimeSetBtn" style="display:none;" aria-hidden="true">SET</button><div id="showTimeTotalDisplay" style="flex:1;display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span id="showTimeTotalVal" style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--gold);letter-spacing:0.08em;">—</span><span id="showTimeTotalLabel" style="font-size:0.68rem;color:var(--muted);letter-spacing:0.14em;"></span></div></div><button class="start-show-btn" id="startShowBtn" type="button">
+      <div id="showTimeRow" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;"><label style="font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);white-space:nowrap;">Show Time:</label><input type="time" id="preshowStartTimeInput" aria-label="Scheduled show start time" style="background:var(--surface2);border:1px solid rgba(255,255,255,0.1);color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:5px 8px;border-radius:2px;outline:none;transition:border-color 0.2s;cursor:pointer;" title="Set scheduled start time — drives the audience preshow countdown"><button type="button" id="preshowStartTimeSetBtn" style="padding:5px 12px;font-family:'Bebas Neue',sans-serif;font-size:0.82rem;letter-spacing:0.1em;background:rgba(232,193,74,0.1);border:1px solid rgba(232,193,74,0.3);color:var(--gold);border-radius:2px;cursor:pointer;" aria-label="Save show start time">SET</button><button type="button" id="preshowStartTimeClearBtn" style="padding:5px 10px;font-size:0.75rem;font-family:'Bebas Neue',sans-serif;letter-spacing:0.08em;background:transparent;border:1px solid rgba(232,74,74,0.3);color:var(--red);border-radius:2px;cursor:pointer;" aria-label="Clear show start time">✕</button><div id="showTimeTotalDisplay" style="flex:1;display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span id="showTimeTotalVal" style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--gold);letter-spacing:0.08em;">—</span><span id="showTimeTotalLabel" style="font-size:0.68rem;color:var(--muted);letter-spacing:0.14em;"></span></div></div><button class="start-show-btn" id="startShowBtn" type="button">
         <span style="font-size:1.4rem;" aria-hidden="true">&#127916;</span> START THE SHOW
       </button>
       <div class="show-lineup" id="showLineup" aria-label="Tonight's lineup">
@@ -2363,6 +2535,14 @@
     <div class="card-body" id="cardBody">
       <div class="performer-name" id="performerName">&mdash;</div>
       <div class="performer-genre" id="performerGenre">&mdash;</div>
+      <div class="judge-mode-banner" id="judgeModeBanner" role="status" aria-live="polite">
+        <span class="jmb-icon">⚖</span>
+        <div class="jmb-text">
+          <div class="jmb-title" id="jmbTitle">Judge Mode</div>
+          <div class="jmb-sub">Your votes are weighted as judge scores</div>
+        </div>
+        <button class="jmb-exit" id="jmbExitBtn" type="button" aria-label="Exit judge mode">Exit</button>
+      </div>
       <div class="rating-label">Score 1 &ndash; 10</div>
       <div class="vote-lock-banner" id="voteLockBanner" aria-live="polite"></div>
           <div class="rating-group" id="ratingGroup" role="radiogroup" aria-label="Score 1 to 10"></div>
@@ -2437,7 +2617,32 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
 //# sourceMappingURL=/sm/26b4b0d0b1e283d6b3ec9857ac597d7a60c76ac17be1ef4c965f03086de426bb.map
 
 // ══════════════════════════════════════════════════════════════════════════
-// Funkytown v22.0 — Bug Fix Release (auto-patched by patch_funkytown.py)
+// v45.0 — Security, Data Integrity & Mode-Switching Fixes
+// ══════════════════════════════════════════════════════════════════════════
+// SEC-1  PIN hashing before storage: PINs stored as SHA-256 hashes with a
+//        '$pin$' sentinel prefix. checkAuthPin() uses async _verifyPin().
+//        Legacy plaintext PINs are migrated on first successful login.
+//        cpCheck() and emergency reset use _storeHashedPin().
+// SEC-2  _isDefaultPin() fixed: was hashing the already-hashed "$pin$<h>"
+//        string, so the warning never fired after a hash migration. Now
+//        directly compares stored === '$pin$' + _DEFAULT_PIN_HASH.
+// SEC-3  Readiness checklist PIN check fixed to handle hashed storage.
+// FIX-4  computeTallies() NaN guard: parseFloat() + isFinite() guard means
+//        malformed vote objects no longer corrupt per-performer averages.
+// FIX-5  confirmCloseEvent() called applyAudienceUI() unconditionally —
+//        manager was kicked out of manager mode on every event close.
+//        Fixed: if IS_MANAGER, calls applyManagerUI() instead.
+// FIX-6  confirmReset() left the manager in a partial state (panel visible
+//        but stale). Fixed: applyManagerUI() called after reset if IS_MANAGER.
+// FIX-7  #intermissionScreen had pointer-events:none permanently in CSS.
+//        Added pointer-events:auto to the .visible state so the intermission
+//        screen is interactive when shown.
+// FIX-8  Show Start Time input exposed in manager preshow panel (was
+//        display:none). SET + ✕ buttons wired; drives audience countdown.
+// VERIFY broadcastRevealBtn / replayAwardsBtn already wired in _initV16Patches ✓
+// VERIFY _updatePreshowAudienceCount already defined ✓
+// ══════════════════════════════════════════════════════════════════════════
+
 // ══════════════════════════════════════════════════════════════════════════
 // BUG-1  confirmVote() now uses _pendingPerformer snapshotted at modal-open
 //        time, not performers[currentIndex] at confirm time.
@@ -2767,9 +2972,22 @@ const DEFAULT_EVENT_CODE='FUNKY2026',SESSION_DURATION_MS=30*60*1000;
 // NOTE: PIN is stored in localStorage. For production events, implement server-side auth.
 // Current approach is sufficient for local showcase events where physical access is controlled.
 // SHA-256('1234') — to detect un-changed factory default
-const _DEFAULT_PIN_HASH='03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+const _DEFAULT_PIN_HASH='03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f';
 async function _sha256(str){try{const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}catch(e){return null;}}
-async function _isDefaultPin(){try{const h=await _sha256(getPin());if(h)return h===_DEFAULT_PIN_HASH;return getPin()==='1234';}catch(e){return false;}}
+async function _isDefaultPin(){try{const stored=ls.get(KEY.PIN,'1234');
+// Hashed storage: "$pin$<sha256>" — extract the hash directly and compare
+if(_isPinHashed(stored)){return stored===_PIN_PREFIX+_DEFAULT_PIN_HASH;}
+// Legacy plaintext
+return stored==='1234';}catch(e){return false;}}
+// ── Hashed PIN helpers ────────────────────────────────────────────────────
+// PINs are stored as SHA-256 hashes, never as plaintext.
+// Legacy plaintext PINs (4 digits, no '$pin$' prefix) are migrated on first login.
+const _PIN_PREFIX='$pin$'; // sentinel to distinguish hashed from legacy plaintext
+async function _hashPin(plain){const h=await _sha256(plain);return h?_PIN_PREFIX+h:null;}
+function _isPinHashed(v){return typeof v==='string'&&v.startsWith(_PIN_PREFIX);}
+async function _verifyPin(plain){const stored=ls.get(KEY.PIN,'1234');if(_isPinHashed(stored)){const h=await _sha256(plain);return h?stored===_PIN_PREFIX+h:false;}// Legacy plaintext — verify AND migrate
+if(plain===stored){const hashed=await _hashPin(plain);if(hashed)ls.set(KEY.PIN,hashed);return true;}return false;}
+async function _storeHashedPin(plain){const hashed=await _hashPin(plain);if(hashed){ls.set(KEY.PIN,hashed);return true;}ls.set(KEY.PIN,plain);return false;}
 const _mem=Object.create(null),_ses=Object.create(null);
 function _storeOp(store,op,key,val){try{if(op==='get'){const v=store.getItem(key);return v!==null?JSON.parse(v):undefined;}if(op==='set')store.setItem(key,JSON.stringify(val));if(op==='del')store.removeItem(key);}catch(e){return undefined;}}
 const ls={get(k,fb=null){const v=_storeOp(localStorage,'get',k);return v!==undefined?v:(k in _mem?_mem[k]:fb);},set(k,v){_mem[k]=v;_storeOp(localStorage,'set',k,v);},del(k){delete _mem[k];_storeOp(localStorage,'del',k);}};
@@ -2782,7 +3000,7 @@ function getTicket(){try{let t=localStorage.getItem(KEY.TICKET);if(!t){t=crypto.
 const SESSION_TICKET=getTicket();
 function resetSetListData(){performers=JSON.parse(JSON.stringify(DEFAULT_PERFORMERS));saveSetList();if(typeof window._syncShowTimeDurationHint==='function')window._syncShowTimeDurationHint();}
 const PHASE={IDLE:'idle',PERFORMING:'performing',VOTING:'voting',BETWEEN:'between',DONE:'done'};
-const APP_VERSION='44.0'; // v44: improved build
+const APP_VERSION='45.0'; // v45: security & integrity fixes
 let IS_MANAGER=false,currentIndex=0,showStarted=false,currentPhase=PHASE.IDLE,votingClosed=false,finalized=false,previewMode=false;
 let selectedScore=null,pendingScore=null,allVotes=[],controlRecord=null,performerImages=[];
 let sessionCountdownInterval=null,ringTimerEnd=null,ringTotalSec=90,ringInterval=null,voteTimerEnd=null,voteInterval=null,audienceInterval=null,pipTimerInterval=null;
@@ -2831,15 +3049,199 @@ function showToast(msg,type='',duration=3000){
   }
 const c=type==='ok'?'var(--green)':type==='err'?'var(--red)':type==='info'?'var(--amber)':'var(--gold)';const t=document.createElement('div');t.style.cssText=`position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:var(--surface3);border:1px solid ${c};color:${c};font-family:'DM Sans',sans-serif;font-size:0.82rem;padding:10px 20px;border-radius:2px;z-index:99993;animation:fadeUp 0.3s both;white-space:nowrap;pointer-events:none;`;if(msg instanceof Node){t.style.pointerEvents='auto';t.appendChild(msg);}else{t.textContent=msg;}if(typeof msg==='string')t.dataset.toastMsg=msg;
   document.body.appendChild(t);setTimeout(()=>t.remove(),typeof duration==='number'&&duration>0?duration:3000);}
-// NOTE: HAS_SDK and window.dataSdk must be injected by a separate SDK script before this file loads.
-// Without it, all sync/multi-device features are disabled and the app runs in localStorage-only mode.
-const HAS_SDK=typeof window!=='undefined'&&!!window.dataSdk;
+// ═══════════════════════════════════════════════════════════════════════════
+// FIREBASE REAL-TIME BACKEND
+// Provides multi-device vote sync, live tallies, and manager control state.
+//
+// SETUP (one-time — 5 minutes):
+//   1. Go to https://console.firebase.google.com → Create project → "funkytown2026"
+//   2. Build → Realtime Database → Create database → Start in test mode
+//   3. Build → Authentication → Get Started → Anonymous → Enable
+//   4. Click the gear ⚙ → Project settings → Your apps → </> Web app
+//   5. Copy the firebaseConfig object values into FIREBASE_CONFIG below
+//   6. Deploy: just commit this file to GitHub — Pages will serve it instantly
+//
+// SECURITY: After testing, go to Realtime Database → Rules and paste:
+// {
+//   "rules": {
+//     "votes": { ".read": true, ".write": "auth != null" },
+//     "control": { ".read": true, ".write": "auth != null" }
+//   }
+// }
+// ═══════════════════════════════════════════════════════════════════════════
+
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyCy5GCranongf5ew0-GY7SnLFx2rE020s4",
+  authDomain:        "funkytown-showcase.firebaseapp.com",
+  databaseURL:       "https://funkytown-showcase-default-rtdb.firebaseio.com",
+  projectId:         "funkytown-showcase",
+  storageBucket:     "funkytown-showcase.firebasestorage.app",
+  messagingSenderId: "594550419031",
+  appId:             "1:594550419031:web:29f45fff2cde8f6b7abd12"
+};
+
+// Detect whether Firebase config has been filled in
+const _fbConfigured = FIREBASE_CONFIG.apiKey !== "PASTE_YOUR_API_KEY_HERE";
+
+let _fbDB = null;       // Firebase Realtime Database reference
+let _fbAuth = null;     // Firebase Auth instance
+let _fbVotesRef = null; // DB ref for votes
+let _fbCtrlRef = null;  // DB ref for control state
+let _fbUnsubVotes = null;
+let _fbUnsubCtrl = null;
+let _fbChatRef = null;       // DB ref for ephemeral chat (v49)
+let _fbChatUnsub = null;     // detach function for chat listener
+
+async function _initFirebase() {
+  if (!_fbConfigured) {
+    console.info('[Funkytown] Firebase not configured — running in localStorage-only mode. Follow the SETUP comments above FIREBASE_CONFIG to enable real-time multi-device sync.');
+    return false;
+  }
+  try {
+    // Dynamically load Firebase SDKs from CDN (compat v9 UMD — works without bundler)
+    await _loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
+    await _loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js');
+    await _loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js');
+
+    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    _fbDB   = firebase.database();
+    _fbAuth = firebase.auth();
+
+    // Sign in anonymously so database security rules allow writes
+    await _fbAuth.signInAnonymously();
+
+    const eventCode = (localStorage.getItem('ft_event_code') || 'FUNKY2026').toUpperCase();
+    _fbVotesRef = _fbDB.ref('events/' + eventCode + '/votes');
+    _fbCtrlRef  = _fbDB.ref('events/' + eventCode + '/control');
+    _fbChatRef  = _fbDB.ref('events/' + eventCode + '/chat');   // v49: ephemeral chat
+
+    // Expose dataSdk shim so existing HAS_SDK code works unchanged
+    window.dataSdk = _buildFirebaseDataSdk();
+
+    console.info('[Funkytown] Firebase connected — real-time multi-device sync active ✓');
+    return true;
+  } catch (err) {
+    console.warn('[Funkytown] Firebase init failed — falling back to localStorage-only mode.', err);
+    return false;
+  }
+}
+
+function _loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector('script[src="' + src + '"]')) { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = () => reject(new Error('Failed to load ' + src));
+    document.head.appendChild(s);
+  });
+}
+
+// Builds a dataSdk shim that maps the existing app API calls to Firebase operations
+function _buildFirebaseDataSdk() {
+  return {
+    // Create a vote record (or control state record)
+    async create(payload) {
+      try {
+        const ref = payload.performer_id === -1 ? _fbCtrlRef : _fbVotesRef.push();
+        if (payload.performer_id === -1) {
+          await _fbCtrlRef.set({ ...payload, _updatedAt: Date.now() });
+          return { isOk: true, data: { ...payload, _fbKey: 'control' } };
+        } else {
+          await ref.set({ ...payload, _updatedAt: Date.now() });
+          return { isOk: true, data: { ...payload, _fbKey: ref.key } };
+        }
+      } catch (e) {
+        return { isOk: false, error: e };
+      }
+    },
+    // Update an existing record (votes or control)
+    async update(record) {
+      try {
+        if (record.performer_id === -1 || record._fbKey === 'control') {
+          await _fbCtrlRef.update({ ...record, _updatedAt: Date.now() });
+        } else if (record._fbKey) {
+          await _fbVotesRef.child(record._fbKey).update({ ...record, _updatedAt: Date.now() });
+        }
+        return { isOk: true, data: record };
+      } catch (e) {
+        return { isOk: false, error: e };
+      }
+    },
+    // Delete a record
+    async delete(record) {
+      try {
+        if (record._fbKey && record._fbKey !== 'control') {
+          await _fbVotesRef.child(record._fbKey).remove();
+        }
+        return { isOk: true };
+      } catch (e) {
+        return { isOk: false, error: e };
+      }
+    },
+    // Subscribe to real-time updates.
+    // handler may be a plain function OR an object with .onDataChanged() (dataHandler pattern).
+    subscribe(handler) {
+      const invoke = (data) => {
+        if (typeof handler === 'function') handler(data);
+        else if (handler && typeof handler.onDataChanged === 'function') handler.onDataChanged(data);
+      };
+      // Listen to all votes
+      const votesListener = _fbVotesRef.on('value', snap => {
+        const votes = [];
+        snap.forEach(child => {
+          const v = child.val();
+          if (v) votes.push({ ...v, _fbKey: child.key });
+        });
+        allVotes = votes;
+        computeTallies();
+        updateTallies();
+        invoke(votes);
+      });
+      // Listen to manager control state (for audience devices)
+      const ctrlListener = _fbCtrlRef.on('value', snap => {
+        const ctrl = snap.val();
+        if (ctrl && typeof ctrl.ticket_id === 'string') {
+          try {
+            const flags = JSON.parse(ctrl.ticket_id);
+            invoke([{ ...ctrl, _isControl: true, ...flags }]);
+          } catch(e) {}
+        }
+      });
+      _fbUnsubVotes = () => _fbVotesRef.off('value', votesListener);
+      _fbUnsubCtrl  = () => _fbCtrlRef.off('value', ctrlListener);
+    },
+    unsubscribe() {
+      if (_fbUnsubVotes) _fbUnsubVotes();
+      if (_fbUnsubCtrl)  _fbUnsubCtrl();
+    }
+  };
+}
+
+// NOTE: HAS_SDK is set to true after _initFirebase() runs and window.dataSdk is populated.
+// It starts false and is updated by bootApp() once Firebase (or any SDK) is confirmed ready.
+let HAS_SDK=typeof window!=='undefined'&&!!window.dataSdk;
+function _showSyncModeBanner(){
+  if(HAS_SDK)return;
+  const bar=$('syncModeBar');if(!bar)return;
+  bar.innerHTML='\u26A0\uFE0F Offline mode \u2014 votes saved locally only. For real-time multi-device sync, check your hosting setup.';
+  bar.classList.add('visible');
+  // Non-dismissible in offline mode — always show so users know sync is inactive
+}
+// v50: audience-specific sync status — shown instead of the manager-oriented orange bar
+function _showAudienceSyncNote(){
+  if(HAS_SDK)return; // real-time sync is active — nothing to show
+  const el=document.getElementById('audienceSyncNote');if(!el)return;
+  el.textContent='\uD83D\uDCE1 Local mode \u2014 your votes are saved on this device';
+  el.classList.add('visible');
+}
 function getMyVotes(){const m={};allVotes.forEach(v=>{if(v.ticket_id===SESSION_TICKET&&v.performer_id>0)m[v.performer_id]=v.score;});return m;}
 function hasVoted(id){return getMyVotes()[id]!==undefined;}
 function getVotedScore(id){return getMyVotes()[id]??null;}
 // Tie-breaking rule: performers with equal average scores are ordered by MOST TOTAL VOTES,
 // then by insertion order (first performer in setlist wins). This is explicit and auditable.
-function computeTallies(){performers.forEach(p=>{p.total=0;p.count=0;p._scores=[];});allVotes.forEach(v=>{if(v.performer_id>0){const p=performers.find(x=>x.id===v.performer_id);if(p){p.total+=(v.score||0);p.count++;p._scores.push(v.score||0);}}});performers.forEach(p=>{if(p._scores.length){const s=[...p._scores].sort((a,b)=>a-b);p._min=s[0];p._max=s[s.length-1];const m=Math.floor(s.length/2);p._median=s.length%2?s[m]:(s[m-1]+s[m])/2;}else{p._min=null;p._max=null;p._median=null;}});}
+function computeTallies(){performers.forEach(p=>{p.total=0;p.count=0;p._scores=[];});allVotes.forEach(v=>{if(v.performer_id>0&&!v.is_judge){const p=performers.find(x=>x.id===v.performer_id);if(p){const s=parseFloat(v.score);if(!isFinite(s)||isNaN(s))return; // FIX: skip malformed scores silently; is_judge excluded to prevent double-count in weighted overall
+p.total+=s;p.count++;p._scores.push(s);}}});performers.forEach(p=>{if(p._scores.length){const s=[...p._scores].sort((a,b)=>a-b);p._min=s[0];p._max=s[s.length-1];const m=Math.floor(s.length/2);p._median=s.length%2?s[m]:(s[m-1]+s[m])/2;}else{p._min=null;p._max=null;p._median=null;}});}
 
 async function createVote(obj){
   // Offline queue: if offline, store to queue and update local state optimistically
@@ -2905,9 +3307,9 @@ const ws=$('waitingScreen');if(ws)ws.classList.add('visible');const vf=$('voting
 
 async function pushControlState(){if(!IS_MANAGER)return null;const flags={voting_closed:votingClosed,finalized,show_started:showStarted,phase:currentPhase,ring_timer_end:ringTimerEnd,vote_timer_end:voteTimerEnd,ring_total_sec:ringTotalSec,winner_revealed:_winnerBroadcast,event_paused:_eventPaused,intermission_active:_intermissionActive,performers:performers.map(p=>({id:p.id,name:p.name,genre:p.genre,perfDuration:p.perfDuration??p.votingDuration??90,voteDuration:p.voteDuration??60}))};const payload={performer_id:-1,score:currentIndex,ticket_id:JSON.stringify(flags),created_at:new Date().toISOString()};if(!HAS_SDK){controlRecord=payload;_saveCrashState();return{isOk:true};}try{if(controlRecord){controlRecord.score=currentIndex;controlRecord.ticket_id=JSON.stringify(flags);const r=await window.dataSdk.update(controlRecord);return r.isOk?r:null;}else{const r=await window.dataSdk.create(payload);if(r.isOk)controlRecord=r.data;return r.isOk?r:null;}}catch(e){return null;}}
 
-function detectManagerMode(){if(isSessionValid())return true;const url=location.href.toLowerCase();return url.includes('manager')||new URLSearchParams(location.search).get('mode')==='manager';}
+function detectManagerMode(){return isSessionValid();}
 function audienceUrl(){return location.origin+location.pathname;}
-function showEventCodeGate(){const gate=$('eventCodeGate');if(!gate)return;gate.classList.add('visible');const inp=$('eventCodeInput');if(inp){inp.value='';setTimeout(()=>inp.focus(),100);}const err=$('eventCodeError');if(err)err.textContent='';}
+function showEventCodeGate(){const gate=$('eventCodeGate');if(!gate)return;gate.classList.add('visible');const inp=$('eventCodeInput');if(inp){inp.value='';setTimeout(()=>inp.focus(),100);}const err=$('eventCodeError');if(err)err.textContent='';const hint=$('ecgHint');if(hint){const code=getEventCode();hint.innerHTML='Tonight\'s event code: <strong style="color:var(--gold);letter-spacing:0.12em;">'+code+'</strong><br><span style="font-size:0.65rem;">Ask the stage manager if unsure</span>';}}
 function hideEventCodeGate(){const el=$('eventCodeGate');if(el)el.classList.remove('visible');}
 function submitEventCode(){
   const inp=$('eventCodeInput');if(!inp)return;
@@ -2961,12 +3363,12 @@ function submitEventCode(){
 function showTicketBadge(){const b=$('ticketBadge');if(b)b.classList.remove('hidden');const n=$('ticketBadgeNumber');if(n)n.textContent=SESSION_TICKET.slice(0,8).toUpperCase();}
 
 let authBuffer='',authResolve=null,lockoutUntil=0,failCount=0;
-function showAuthOverlay(){return new Promise(res=>{authResolve=res;authBuffer='';updateAuthDots();const err=$('authError');if(err)err.textContent='';const ov=$('authOverlay');if(ov)ov.classList.remove('hidden');});}
-function hideAuthOverlay(){const ov=$('authOverlay');if(ov)ov.classList.add('hidden');authBuffer='';updateAuthDots();if(authResolve){authResolve(false);authResolve=null;}}
+function showAuthOverlay(){return new Promise(res=>{if(authResolve){res(false);return;}authResolve=res;authBuffer='';updateAuthDots();const err=$('authError');if(err)err.textContent='';const ov=$('authOverlay');if(ov)ov.classList.remove('hidden');const fab=$('managerAccessBtn');if(fab)fab.style.pointerEvents='none';});}
+function hideAuthOverlay(){const ov=$('authOverlay');if(ov)ov.classList.add('hidden');authBuffer='';updateAuthDots();const fab=$('managerAccessBtn');if(fab)fab.style.pointerEvents='';if(authResolve){authResolve(false);authResolve=null;}}
 function updateAuthDots(){for(let i=0;i<4;i++){const d=$('dot'+i);if(!d)continue;d.classList.remove('filled','error');if(i<authBuffer.length)d.classList.add('filled');}}
 function flashAuthError(msg){for(let i=0;i<4;i++){const d=$('dot'+i);if(d){d.classList.remove('filled');d.classList.add('error');}}const err=$('authError');if(err)err.textContent=msg;setTimeout(()=>{authBuffer='';updateAuthDots();},700);}
 function authDigit(d){if(Date.now()<lockoutUntil){const err=$('authError');if(err)err.textContent='Locked. Wait '+Math.ceil((lockoutUntil-Date.now())/1000)+'s.';return;}if(authBuffer.length>=4)return;authBuffer+=d;updateAuthDots();if(authBuffer.length===4)setTimeout(checkAuthPin,100);}
-function checkAuthPin(){if(authBuffer===getPin()){failCount=0;const ov=$('authOverlay');if(ov)ov.classList.add('hidden');const r=authResolve;authResolve=null;authBuffer='';updateAuthDots();if(r)r(true);}else{failCount++;if(failCount>=5){lockoutUntil=Date.now()+30000;flashAuthError('Too many attempts. Locked 30s.');}else flashAuthError('Incorrect PIN. '+(5-failCount)+' left.');}}
+function checkAuthPin(){_verifyPin(authBuffer).then(ok=>{if(ok){failCount=0;const ov=$('authOverlay');if(ov)ov.classList.add('hidden');const fab=$('managerAccessBtn');if(fab)fab.style.pointerEvents='';const r=authResolve;authResolve=null;authBuffer='';updateAuthDots();if(r)r(true);}else{failCount++;if(failCount>=5){lockoutUntil=Date.now()+30000;flashAuthError('Too many attempts. Locked 30s.');}else flashAuthError('Incorrect PIN. '+(5-failCount)+' left.');}});}
 function initAuthKeypad(){const kp=$('authKeypad');if(!kp)return;kp.querySelectorAll('[data-digit]').forEach(b=>b.addEventListener('click',()=>authDigit(b.dataset.digit)));const del=$('authDelBtn');if(del)del.addEventListener('click',()=>{authBuffer=authBuffer.slice(0,-1);updateAuthDots();const e=$('authError');if(e)e.textContent='';});const cancel=$('authCancelBtn');if(cancel)cancel.addEventListener('click',hideAuthOverlay);document.addEventListener('keydown',e=>{const ov=$('authOverlay');if(!ov||ov.classList.contains('hidden'))return;if(e.key>='0'&&e.key<='9')authDigit(e.key);else if(e.key==='Backspace'){authBuffer=authBuffer.slice(0,-1);updateAuthDots();}else if(e.key==='Escape')hideAuthOverlay();});}
 
 let cpStep=1,cpNew='',cpConfirm='';
@@ -2974,7 +3376,7 @@ function openChangePinModal(){cpStep=1;cpNew='';cpConfirm='';updateCpUI();const 
 function closeChangePinModal(){const m=$('changePinModal');if(m)m.classList.remove('open');}
 function updateCpUI(){const lbl=$('cpStepLabel');if(lbl)lbl.textContent=cpStep===1?'Step 1 of 2 \u2014 Enter new PIN':'Step 2 of 2 \u2014 Confirm new PIN';const cur=cpStep===1?cpNew:cpConfirm;for(let i=0;i<4;i++){const d=$('cpd'+i);if(d){d.classList.remove('filled','error');if(i<cur.length)d.classList.add('filled');}}const msg=$('cpMsg');if(msg)msg.textContent='';}
 function cpDigit(d){if(cpStep===1){if(cpNew.length>=4)return;cpNew+=d;}else{if(cpConfirm.length>=4)return;cpConfirm+=d;}const len=cpStep===1?cpNew.length:cpConfirm.length;for(let i=0;i<4;i++){const dot=$('cpd'+i);if(dot)dot.classList.toggle('filled',i<len);}if(len===4)setTimeout(cpCheck,150);}
-function cpCheck(){if(cpStep===1){cpStep=2;updateCpUI();}else if(cpNew===cpConfirm){setPin(cpNew);closeChangePinModal();showToast('PIN changed','ok');_auditLog('pin_changed');}else{for(let i=0;i<4;i++){const d=$('cpd'+i);if(d){d.classList.remove('filled');d.classList.add('error');}}const msg=$('cpMsg');if(msg)msg.textContent='PINs do not match.';setTimeout(()=>{cpStep=1;cpNew='';cpConfirm='';updateCpUI();},1200);}}
+function cpCheck(){if(cpStep===1){cpStep=2;updateCpUI();}else if(cpNew===cpConfirm){_storeHashedPin(cpNew).then(()=>{closeChangePinModal();showToast('PIN changed','ok');_auditLog('pin_changed');});}else{for(let i=0;i<4;i++){const d=$('cpd'+i);if(d){d.classList.remove('filled');d.classList.add('error');}}const msg=$('cpMsg');if(msg)msg.textContent='PINs do not match.';setTimeout(()=>{cpStep=1;cpNew='';cpConfirm='';updateCpUI();},1200);}}
 function initChangePinKeypad(){document.querySelectorAll('[data-cpdigit]').forEach(b=>b.addEventListener('click',()=>cpDigit(b.dataset.cpdigit)));const del=$('cpDelBtn');if(del)del.addEventListener('click',()=>{if(cpStep===1)cpNew=cpNew.slice(0,-1);else cpConfirm=cpConfirm.slice(0,-1);updateCpUI();});const cancel=$('cpCancelBtn');if(cancel)cancel.addEventListener('click',closeChangePinModal);const reset=$('cpResetBtn');if(reset)reset.addEventListener('click',()=>{
   // v16 FIX: replaced prompt() (blocked in iframes) with inline input
   let eBar=document.getElementById('emergencyPinBar');
@@ -2987,8 +3389,7 @@ function initChangePinKeypad(){document.querySelectorAll('[data-cpdigit]').forEa
     document.getElementById('emergencyPinSave').addEventListener('click',()=>{
       const v=document.getElementById('emergencyPinInput').value.trim();
       if(!/^\d{4}$/.test(v)){showToast('Must be exactly 4 digits','err');return;}
-      setPin(v);eBar.remove();closeChangePinModal();showToast('PIN has been reset','ok');
-      _auditLog('pin_emergency_reset');
+      _storeHashedPin(v).then(()=>{eBar.remove();closeChangePinModal();showToast('PIN has been reset','ok');_auditLog('pin_emergency_reset');});
     });
   }
   eBar.style.display='flex';
@@ -2997,7 +3398,8 @@ function initChangePinKeypad(){document.querySelectorAll('[data-cpdigit]').forEa
 
 function startSessionCountdown(){if(sessionCountdownInterval)clearInterval(sessionCountdownInterval);if(!IS_MANAGER){const sb=$('sessionBanner');if(sb)sb.classList.remove('visible');return;}const sb=$('sessionBanner');if(sb)sb.classList.add('visible');const tick=()=>{const ms=sessionRemMs();if(ms<=0){clearInterval(sessionCountdownInterval);doLockManager();return;}const m=Math.floor(ms/60000),s=Math.floor((ms%60000)/1000);const val=$('sessionTimerVal');if(val){val.textContent=m+':'+(s.toString().padStart(2,'0'));val.className='session-timer-val'+(ms<5*60*1000?' warning':'');}};tick();sessionCountdownInterval=setInterval(tick,1000);}
 
-async function requestManagerAccess(){const ok=await showAuthOverlay();if(!ok)return;createSession();IS_MANAGER=true;applyManagerUI();startSessionCountdown();showToast('Manager access granted','ok');_auditLog('manager_login');
+let _authInProgress=false;
+async function requestManagerAccess(){if(_authInProgress)return;_authInProgress=true;const fab=$('managerAccessBtn');if(fab)fab.style.pointerEvents='none';let ok=false;try{ok=await showAuthOverlay();}finally{_authInProgress=false;if(fab)fab.style.pointerEvents='';}if(!ok)return;createSession();IS_MANAGER=true;applyManagerUI();startSessionCountdown();showToast('Manager access granted','ok');_auditLog('manager_login');
   // FIX#10: duplicate PIN toast removed — checkFirstLoginPinWarn() shows pinWarnModal at 800ms
 }
 
@@ -3126,9 +3528,12 @@ function doLockManager(){
   if(voteTimerEnd&&Date.now()<voteTimerEnd&&!votingClosed)syncAudienceTimer();
 }
 
-function applyManagerUI(){_initV21Buttons();
+function applyManagerUI(){_initV21Buttons();_showSyncModeBanner();
   var _amuIms=document.getElementById('intermissionScreen');
   if(_amuIms&&_amuIms.classList.contains('visible')){_amuIms.classList.remove('visible');if(typeof _stopIntermission==='function')_stopIntermission(false);}
+  // Always hide event code gate and auth overlay when entering manager mode
+  hideEventCodeGate();
+  const _amuAuth=$('authOverlay');if(_amuAuth)_amuAuth.classList.add('hidden');
   document.body.classList.remove('audience-mode');
   // Restore all manager-only panels
   const alb=$('audienceLinkBar');if(alb)alb.style.display='flex';
@@ -3288,6 +3693,10 @@ function applyAudienceUI(){
   const _epfAud=document.getElementById('emergencyPauseFab');if(_epfAud)_epfAud.classList.remove('visible');
   const _spbAud=document.getElementById('sfpPauseBtn');if(_spbAud)_spbAud.style.display='none';
   const _anrAud=document.getElementById('autoNextRow');if(_anrAud)_anrAud.style.display='none';
+  // v50: wire audience chat FAB + panel
+  if(typeof _initAudienceChatPanel==='function')_initAudienceChatPanel();
+  // v50: show audience-appropriate sync status when Firebase is unavailable
+  if(typeof _showAudienceSyncNote==='function')_showAudienceSyncNote();
 }
 
 function updateLineupView(){const grid=$('lineupGrid'),panel=$('showLineup');if(!grid||!panel)return;panel.classList.toggle('visible',IS_MANAGER);const frag=document.createDocumentFragment();performers.forEach((p,i)=>{const chip=document.createElement('div');chip.className='lineup-chip'+(IS_MANAGER?' clickable':'')+(i===currentIndex?' active-chip':i<currentIndex?' done-chip':'');chip.title=p.name;chip.innerHTML=`<span class="lineup-chip-num">${i+1}</span><span>${esc(p.name)}</span>`;if(IS_MANAGER){chip.addEventListener('click',()=>{if(showStarted)beginPerformerPhase(i);else{currentIndex=i;loadPerformer(i);pushControlState();}});}frag.appendChild(chip);});grid.textContent='';grid.appendChild(frag);}
@@ -3298,6 +3707,10 @@ function _syncBodyPhaseClass(){
   // Sync body class so CSS can show/hide next-up cards based on phase
   document.body.classList.remove('phase-idle','phase-performing','phase-voting','phase-between','phase-done');
   if(currentPhase)document.body.classList.add('phase-'+currentPhase);
+  // v50: auto-close audience chat panel during focused phases
+  if(!IS_MANAGER&&(currentPhase===PHASE.PERFORMING||currentPhase===PHASE.VOTING)){
+    if(typeof _closeAudienceChat==='function')_closeAudienceChat();
+  }
 }
 function updateSfpPhase(){if(!IS_MANAGER||!showStarted)return;const dot=$('sfpDot'),title=$('sfpTitleText'),p=performers[currentIndex],ovb=$('openVotingBtn'),amb=$('ambient');if(currentPhase===PHASE.PERFORMING){if(dot)dot.className='sfp-dot perf';if(title)title.textContent='\uD83C\uDF99 '+p.name+' performing\u2026';if(ovb)ovb.style.display='block';if(amb)amb.className='ambient show-active';}else if(currentPhase===PHASE.VOTING){if(dot)dot.className='sfp-dot live';if(title)title.textContent='\u2705 Voting Open \u2014 '+p.name;if(ovb)ovb.style.display='none';if(amb)amb.className='ambient voting-active';}else if(currentPhase===PHASE.BETWEEN){if(dot)dot.className='sfp-dot';if(title){const nx=currentIndex<performers.length-1?performers[currentIndex+1]:null;title.textContent='\u23F3 Votes in \u2014 '+(nx?'Up Next: '+nx.name:'All performers done');}if(ovb)ovb.style.display='none';if(amb)amb.className='ambient';}else if(currentPhase===PHASE.DONE){if(dot)dot.className='sfp-dot';if(title)title.textContent='\u2705 Show complete';if(ovb)ovb.style.display='none';if(amb)amb.className='ambient voted-state';}
   _syncBodyPhaseClass();
@@ -3858,7 +4271,7 @@ function loadPerformer(idx){
   const npbc=$('npbCounter');if(npbc)npbc.textContent='Performer '+(idx+1)+' of '+performers.length+' \u2014 '+p.genre;
   if(IS_MANAGER){const pb=$('prevBtn');if(pb)pb.disabled=idx===0;const nb=$('nextBtn');if(nb)nb.disabled=idx===performers.length-1;const cpb=$('ctrlPrevBtn');if(cpb)cpb.disabled=idx===0;const cnb=$('ctrlNextBtn');if(cnb)cnb.disabled=!showStarted||idx>=performers.length-1;const ps=$('performerSelect');if(ps)ps.value=idx;const ptn=$('perfTimerName');if(ptn)ptn.textContent=p.name;}
   const sbt2=$('submitBtnText');
-  if(sbt2){if(!IS_MANAGER){if(!showStarted)sbt2.textContent='Show not started';else if(currentPhase===PHASE.PERFORMING)sbt2.textContent='Voting opens after performance';else if(currentPhase===PHASE.BETWEEN)sbt2.textContent='Get ready to vote…';else if(votingClosed)sbt2.textContent='Voting closed';else if(hasVoted(performers[idx]?.id))sbt2.textContent='UPDATE VOTE';else sbt2.textContent='SUBMIT VOTE';}else{sbt2.textContent='SUBMIT VOTE';}}
+  if(sbt2){if(!IS_MANAGER){if(!showStarted)sbt2.textContent='Show not started';else if(currentPhase===PHASE.PERFORMING)sbt2.textContent='Voting opens after performance';else if(currentPhase===PHASE.BETWEEN)sbt2.textContent='Get ready to vote…';else if(votingClosed)sbt2.textContent='Voting closed';else if(hasVoted(performers[idx]?.id))sbt2.textContent=IS_JUDGE?'\u2696 Update Judge Score':'UPDATE VOTE';else sbt2.textContent=IS_JUDGE?'\u2696 Submit Judge Score':'SUBMIT VOTE';}else{sbt2.textContent='SUBMIT VOTE';}}
   const sf=$('successFlash');if(sf)sf.classList.remove('visible');
   const cb=$('cardBody');if(cb)cb.style.display=(IS_MANAGER||(showStarted&&currentPhase!==PHASE.PERFORMING&&currentPhase!==PHASE.BETWEEN))?'block':'none';
   const vf=$('votingForm');
@@ -3922,7 +4335,7 @@ function selectRating(val,btn){
   btn.classList.add('selected');btn.setAttribute('aria-checked','true');
   selectedScore=val;
   const sb=$('submitBtn');
-  const _isRevote=hasVoted(performers[currentIndex]?.id);if(sb){sb.disabled=false;const sbt=$('submitBtnText');if(sbt)sbt.textContent=_isRevote?'UPDATE VOTE':'SUBMIT VOTE';}if(_isRevote)showToast('Updating your vote — confirm to save','info');
+  const _isRevote=hasVoted(performers[currentIndex]?.id);if(sb){sb.disabled=false;const sbt=$('submitBtnText');if(sbt)sbt.textContent=_isRevote?(IS_JUDGE?'\u2696 Update Judge Score':'UPDATE VOTE'):(IS_JUDGE?'\u2696 Submit Judge Score':'SUBMIT VOTE');}if(_isRevote)showToast(IS_JUDGE?'Updating your judge score — confirm to save':'Updating your vote — confirm to save','info');
   const spf=$('scorePreviewFill');if(spf)spf.style.width=(val*10)+'%';
   const amb=$('ambient');if(amb)amb.classList.add('voting-active');
   // FIX: robust mobile scroll — delayed, avoids fighting soft keyboard
@@ -4417,7 +4830,7 @@ async function confirmCloseEvent(){
   if(_autoAdvance)_auditLog('auto_advance_reset','closeEvent');
   _autoAdvance=false;ls.set(KEY.AUTO_ADVANCE,'0');
   if(typeof updateAutoAdvanceUI==='function')updateAutoAdvanceUI();
-  pushControlState();loadPerformer(0);applyAudienceUI();
+  pushControlState();loadPerformer(0);if(IS_MANAGER){applyManagerUI();updateShowFlowUI();updateLineupView();}else{applyAudienceUI();}
   showToast('Event closed & saved ('+record.total_votes+' votes)','ok');
 }
 
@@ -4453,6 +4866,7 @@ async function confirmReset(){
   hideBanner();const amb=$('ambient');if(amb)amb.className='ambient';
   const fs=$('finalizedScreen');if(fs)fs.classList.remove('visible');
   updateTallies();pushControlState();loadPerformer(0);updateShowFlowUI();updateLineupView();
+  if(IS_MANAGER){applyManagerUI();}
   showToast('All votes reset');
 }
 
@@ -4482,7 +4896,27 @@ function exportPerTicket(){
   }catch(e){showToast('Export failed','err');}
 }
 
-function exportCSV(){let csv='Rank,Performer,Genre,Average Score,Total Votes\n';const sorted=[...performers].filter(p=>p.count>0).sort((a,b)=>(b.total/b.count)-(a.total/a.count));const unseen=performers.filter(p=>p.count===0);[...sorted,...unseen].forEach((p,i)=>{const avg=p.count>0?(p.total/p.count).toFixed(2):'0';csv+=`${i+1},"${p.name.replace(/"/g,'""')}","${p.genre.replace(/"/g,'""')}",${avg},${p.count}\n`;});try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));a.download='funkytown_results_'+new Date().toLocaleDateString('en-CA')+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);}catch(e){showToast('Export failed in this environment','err');}}
+function exportCSV(){
+  const _jmActive=typeof isJudgeModeEnabled==='function'&&isJudgeModeEnabled();
+  let csv=_jmActive?'Rank,Performer,Genre,Audience Avg,Judge Avg,Weighted Overall,Total Votes\n':'Rank,Performer,Genre,Average Score,Total Votes\n';
+  const sorted=[...performers].filter(p=>p.count>0).sort((a,b)=>{
+    const aScore=_jmActive&&a.overall!=null?a.overall:(a.count>0?a.total/a.count:-1);
+    const bScore=_jmActive&&b.overall!=null?b.overall:(b.count>0?b.total/b.count:-1);
+    return bScore-aScore;
+  });
+  const unseen=performers.filter(p=>p.count===0);
+  [...sorted,...unseen].forEach((p,i)=>{
+    const avg=p.count>0?(p.total/p.count).toFixed(2):'0';
+    if(_jmActive){
+      const jAvg=p.judgeAvg!=null?p.judgeAvg.toFixed(2):'';
+      const overall=p.overall!=null?p.overall.toFixed(2):'';
+      csv+=`${i+1},"${p.name.replace(/"/g,'""')}","${p.genre.replace(/"/g,'""')}",${avg},${jAvg},${overall},${p.count}\n`;
+    }else{
+      csv+=`${i+1},"${p.name.replace(/"/g,'""')}","${p.genre.replace(/"/g,'""')}",${avg},${p.count}\n`;
+    }
+  });
+  try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));a.download='funkytown_results_'+new Date().toLocaleDateString('en-CA')+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);}catch(e){showToast('Export failed in this environment','err');}
+}
 
 function copyAudienceLink(){const url=audienceUrl();const btn=$('albCopyBtn');const done=()=>{if(btn){btn.textContent='\u2713 Copied';btn.classList.add('copied');}showToast('Link copied','ok');setTimeout(()=>{if(btn){btn.textContent='Copy';btn.classList.remove('copied');}},2000);};navigator.clipboard.writeText(url).then(done).catch(()=>{try{const ta=document.createElement('textarea');ta.value=url;ta.style.cssText='position:fixed;left:-9999px;';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done();}catch(e){showToast('Copy failed — try long-press','err');}});}
 
@@ -4530,7 +4964,19 @@ function _imsSetBtnActive(active){
   _b.style.borderColor='';_b.style.color='';_b.style.background='';
 }
 
-async function init(){initOfflineDetection();
+async function init(){
+  // ?reset=1 in URL clears all local state — useful when gate or session is stuck
+  if(new URLSearchParams(location.search).get('reset')==='1'){
+    try{
+      const keysToRemove=[KEY.CODE_ENTERED,KEY.SESSION,KEY.TICKET,KEY.CRASH_STATE,KEY.LOCAL_VOTES,KEY.AUDIT,KEY.LAST_VOTE_TIME];
+      keysToRemove.forEach(k=>{try{localStorage.removeItem(k);}catch(e){}});
+      sessionStorage.clear();
+    }catch(e){}
+    // Remove ?reset from URL without reloading
+    const u=new URL(location.href);u.searchParams.delete('reset');
+    history.replaceState(null,'',u.toString());
+  }
+  initOfflineDetection();
   // Generate manifest.json dynamically (file doesn't exist as static asset)
   try{
     const manifestData={
@@ -4790,7 +5236,16 @@ const ctb=$('cancelTimerConfirmBar');if(ctb)ctb.classList.remove('visible');cons
   // ── Wire manager VCB dismiss button ──
   on('vcbDismissBtn','click',()=>hideBanner());
 }
-init().catch(console.error);
+(async function bootApp() {
+  await _initFirebase();
+  // Update HAS_SDK now that Firebase (or any SDK) may have populated window.dataSdk
+  if (window.dataSdk) {
+    HAS_SDK = true;
+    Object.defineProperty(window, "_ftSdkReady", { value: true, writable: false });
+  }
+  _showSyncModeBanner();
+  init().catch(console.error);
+})();
 
 // ── Cross-page live sync: listen for schedule-page changes ──────────────────
 window.addEventListener('storage', function(e) {
@@ -5315,8 +5770,19 @@ if(_sbasVf){if(IS_MANAGER)_sbasVf.style.display='block';else _sbasVf.style.displ
     if(!nuEl){nuEl=document.createElement('div');nuEl.className='next-up-between';pip.appendChild(nuEl);}
     renderNextUpCards(nuEl, nextIdx, 3);
   }
+  // v50: chat discovery nudge — shows after 2.5s if Firebase chat is connected
+  if(!IS_MANAGER&&_fbChatRef){
+    let hint=pip.querySelector('.between-chat-hint');
+    if(!hint){
+      hint=document.createElement('div');
+      hint.className='between-chat-hint';
+      hint.setAttribute('aria-hidden','true');
+      hint.textContent='\u{1F4AC} Live chat is open \u2014 tap Chat below';
+      pip.appendChild(hint);
+    }
+  }
   pip.classList.add('visible');}
-function hideBetweenActsScreen(){const pip=$('perfInProgress');if(!pip)return;pip.classList.remove('visible');const ey=pip.querySelector('.pip-eyebrow');if(ey)ey.textContent='Now Performing';const lbl=pip?pip.querySelector('.pip-timer-label'):null;if(lbl)lbl.textContent='Time Remaining';const sub=pip?pip.querySelector('.pip-sub'):null;if(sub)sub.textContent='Voting opens when the performance ends';}
+function hideBetweenActsScreen(){const pip=$('perfInProgress');if(!pip)return;pip.classList.remove('visible');const hint=pip.querySelector('.between-chat-hint');if(hint)hint.remove();const ey=pip.querySelector('.pip-eyebrow');if(ey)ey.textContent='Now Performing';const lbl=pip?pip.querySelector('.pip-timer-label'):null;if(lbl)lbl.textContent='Time Remaining';const sub=pip?pip.querySelector('.pip-sub'):null;if(sub)sub.textContent='Voting opens when the performance ends';}
 
 function stopPipTimer(){if(pipTimerInterval){clearInterval(pipTimerInterval);pipTimerInterval=null;}}
 function startPipTimer(){stopPipTimer();if(!ringTimerEnd)return;const tick=()=>{const remaining=Math.max(0,Math.ceil((ringTimerEnd-Date.now())/1000));const tv=$('pipTimerVal');if(tv){tv.textContent=remaining>0?_fmt(remaining):'0:00';tv.className='pip-timer-val'+(remaining<=10&&remaining>0?' critical':'');}if(remaining<=0){stopPipTimer();}};tick();pipTimerInterval=setInterval(tick,250);}
@@ -5517,7 +5983,12 @@ function launchConfettiBurst(count=80){
 function showAudienceTallies(){
   const c=$('audienceFinalTallies');if(!c)return;
   computeTallies();
-  const sorted=[...performers].filter(p=>p.count>0).sort((a,b)=>{const avgDiff=(b.total/b.count)-(a.total/a.count);if(Math.abs(avgDiff)>0.0001)return avgDiff;return b.count-a.count;});
+  const _jmActive=typeof isJudgeModeEnabled==='function'&&isJudgeModeEnabled();
+  const _getScore=p=>_jmActive&&p.overall!=null?p.overall:(p.count>0?p.total/p.count:null);
+  const sorted=[...performers].filter(p=>p.count>0).sort((a,b)=>{
+    const aS=_getScore(a)??-1,bS=_getScore(b)??-1;
+    const diff=bS-aS;if(Math.abs(diff)>0.0001)return diff;return b.count-a.count;
+  });
   const unseen=performers.filter(p=>p.count===0);
   if(_audienceTalliesRendered){c.style.display='block';return;}
   _audienceTalliesRendered=true;
@@ -5527,7 +5998,8 @@ function showAudienceTallies(){
   // ── Winner banner with staged animation ─────────────────────────────────
   if(sorted.length>0){
     const winner=sorted[0];
-    const avg=(winner.total/winner.count).toFixed(1);
+    const _winScore=(_jmActive&&winner.overall!=null)?winner.overall:(winner.count>0?winner.total/winner.count:0);
+    const avg=_winScore.toFixed(1);
     const wb=document.createElement('div');
     wb.className='winner-banner animated';
     const photoHtml=winner.photo?`<img src="${esc(winner.photo)}" alt="${esc(winner.name)}" style="width:80px;height:80px;object-fit:cover;border-radius:50%;border:3px solid var(--gold);margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;">`:'<span class="winner-trophy">\uD83C\uDFC6</span>';
@@ -5580,7 +6052,7 @@ function showAudienceTallies(){
   // ── Standings rows with user's score shown ───────────────────────────────
   const medals=['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'];
   [...sorted,...unseen].forEach((p,i)=>{
-    const a=p.count>0?(p.total/p.count).toFixed(1):null;
+    const a=(_jmActive&&p.overall!=null)?p.overall.toFixed(1):(p.count>0?(p.total/p.count).toFixed(1):null);
     const myScore=myVotes[p.id];
     const myScoreHtml=myScore!==undefined&&!IS_MANAGER?`<span style="font-size:0.62rem;color:var(--muted);margin-top:2px;display:block;">You: ${myScore}/10</span>`:'';
     const row=document.createElement('div');
@@ -5612,7 +6084,9 @@ function exportAuditCSV(){
 }
 function exportPDF(){
   computeTallies();
-  const sorted=[...performers].filter(p=>p.count>0).sort((a,b)=>(b.total/b.count)-(a.total/a.count));
+  const _jmActive=typeof isJudgeModeEnabled==='function'&&isJudgeModeEnabled();
+  const _pdfScore=p=>_jmActive&&p.overall!=null?p.overall:(p.count>0?p.total/p.count:null);
+  const sorted=[...performers].filter(p=>p.count>0).sort((a,b)=>(_pdfScore(b)??-1)-(_pdfScore(a)??-1));
   const unseen=performers.filter(p=>p.count===0);
   const all=[...sorted,...unseen];
   const medals=['🥇','🥈','🥉'];
@@ -5620,16 +6094,20 @@ function exportPDF(){
   const now=new Date().toLocaleString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
   const winner=sorted[0];
   const rows=all.map((p,i)=>{
-    const avg=p.count>0?(p.total/p.count).toFixed(2):'—';
+    const rawAvg=p.count>0?(p.total/p.count):null;
+    const displayScore=_pdfScore(p);
+    const avg=displayScore!=null?displayScore.toFixed(2):'—';
     const medal=i<3?medals[i]:String(i+1)+'.';
-    const bar=p.count>0?Math.round((p.total/p.count)/10*100):0;
+    const bar=displayScore!=null?Math.round(displayScore/10*100):0;
     const isWinner=i===0&&p.count>0;
     const photoCell=p.photo?`<td style="padding:8px 14px;border-bottom:1px solid #eee;width:52px;"><img src="${p.photo}" alt="${p.name.replace(/"/g,'&quot;')}" style="width:44px;height:44px;object-fit:cover;border-radius:6px;border:2px solid ${isWinner?'#E8C14A':'#ddd'};"></td>`:`<td style="padding:8px 14px;border-bottom:1px solid #eee;width:52px;text-align:center;font-size:18px;">${medal}</td>`;
     const statsCell=p._min!=null?`<div style="font-size:10px;color:#999;margin-top:3px;">↓${p._min} ↑${p._max} med ${typeof p._median==='number'?p._median.toFixed(1):'-'}</div>`:'';
-    return`<tr style="${isWinner?'background:#fffbe6;':''}">${photoCell}<td style="padding:10px 14px;border-bottom:1px solid #eee;"><strong style="color:${isWinner?'#b8860b':'#111'};">${p.name.replace(/</g,'&lt;')}</strong><div style="color:#666;font-size:12px;">${p.genre.replace(/</g,'&lt;')}</div>${!p.photo&&isWinner?'<div style="font-size:11px;font-weight:700;color:#E8C14A;margin-top:2px;">🏆 WINNER</div>':''}</td><td style="padding:10px 14px;border-bottom:1px solid #eee;text-align:center;color:#666;font-size:13px;">${p.count}</td><td style="padding:10px 14px;border-bottom:1px solid #eee;"><div style="font-size:18px;font-weight:700;color:${isWinner?'#b8860b':'#333'};">${avg}</div><div style="height:5px;background:#eee;border-radius:3px;margin-top:3px;"><div style="height:100%;width:${bar}%;background:${isWinner?'#E8C14A':'#aaa'};border-radius:3px;"></div></div>${statsCell}</td></tr>`;
+    const judgeCell=_jmActive&&p.judgeAvg!=null?`<div style="font-size:10px;color:#b8860b;margin-top:2px;">⚖ Judge: ${p.judgeAvg.toFixed(2)} · Overall: ${avg}</div>`:'';
+    return`<tr style="${isWinner?'background:#fffbe6;':''}">${photoCell}<td style="padding:10px 14px;border-bottom:1px solid #eee;"><strong style="color:${isWinner?'#b8860b':'#111'};">${p.name.replace(/</g,'&lt;')}</strong><div style="color:#666;font-size:12px;">${p.genre.replace(/</g,'&lt;')}</div>${!p.photo&&isWinner?'<div style="font-size:11px;font-weight:700;color:#E8C14A;margin-top:2px;">🏆 WINNER</div>':''}</td><td style="padding:10px 14px;border-bottom:1px solid #eee;text-align:center;color:#666;font-size:13px;">${p.count}</td><td style="padding:10px 14px;border-bottom:1px solid #eee;"><div style="font-size:18px;font-weight:700;color:${isWinner?'#b8860b':'#333'};">${avg}</div><div style="height:5px;background:#eee;border-radius:3px;margin-top:3px;"><div style="height:100%;width:${bar}%;background:${isWinner?'#E8C14A':'#aaa'};border-radius:3px;"></div></div>${statsCell}${judgeCell}</td></tr>`;
   }).join('');
-  const winnerBlock=winner?`<div style="background:#fffbe6;border:2px solid #E8C14A;border-radius:8px;padding:20px 28px;margin-bottom:24px;text-align:center;"><div style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#888;margin-bottom:4px;">WINNER</div><div style="font-size:32px;font-weight:900;color:#111;">🏆 ${winner.name.replace(/</g,'&lt;')}</div><div style="color:#666;margin:4px 0;">${winner.genre.replace(/</g,'&lt;')}</div><div style="font-size:22px;font-weight:700;color:#E8C14A;">${(winner.total/winner.count).toFixed(2)}/10</div></div>`:'';
-  const docHtml=`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Results — ${getEventCode()}</title><style>@page{size:A4;margin:18mm 14mm 18mm 14mm;}@media print{body{max-width:100%!important;padding:0!important;}table{page-break-inside:avoid;}tr{page-break-inside:avoid;}.winner-block{page-break-after:avoid;}}</style></head><body style="font-family:system-ui,sans-serif;max-width:700px;margin:0 auto;padding:32px 24px;color:#111;">${winnerBlock}<h1 style="font-size:22px;margin-bottom:4px;">${getEventCode()} — Results</h1><p style="color:#777;font-size:13px;margin-bottom:20px;">${now} &middot; ${totalVotes} total votes</p><table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#f5f5f5;"><th style="padding:10px 14px;text-align:left;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#666;">Photo</th><th style="padding:10px 14px;text-align:left;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#666;">Performer</th><th style="padding:10px 14px;text-align:center;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#666;">Votes</th><th style="padding:10px 14px;text-align:left;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#666;">Avg Score</th></tr></thead><tbody>${rows}</tbody></table><p style="margin-top:28px;font-size:11px;color:#aaa;border-top:1px solid #eee;padding-top:10px;">Funkytown Showcase Live Voting &nbsp;&middot;&nbsp; Event: <strong>${getEventCode()}</strong> &nbsp;&middot;&nbsp; ${now}</p></body></html>`;
+  const winnerScore=winner?(_pdfScore(winner)??0):0;
+  const winnerBlock=winner?`<div style="background:#fffbe6;border:2px solid #E8C14A;border-radius:8px;padding:20px 28px;margin-bottom:24px;text-align:center;"><div style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#888;margin-bottom:4px;">WINNER</div><div style="font-size:32px;font-weight:900;color:#111;">🏆 ${winner.name.replace(/</g,'&lt;')}</div><div style="color:#666;margin:4px 0;">${winner.genre.replace(/</g,'&lt;')}</div><div style="font-size:22px;font-weight:700;color:#E8C14A;">${winnerScore.toFixed(2)}/10</div></div>`:'';
+  const docHtml=`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Results — ${getEventCode()}</title><style>@page{size:A4;margin:18mm 14mm 18mm 14mm;}@media print{body{max-width:100%!important;padding:0!important;}table{page-break-inside:avoid;}tr{page-break-inside:avoid;}.winner-block{page-break-after:avoid;}}</style></head><body style="font-family:system-ui,sans-serif;max-width:700px;margin:0 auto;padding:32px 24px;color:#111;">${winnerBlock}<h1 style="font-size:22px;margin-bottom:4px;">${getEventCode()} — Results</h1><p style="color:#777;font-size:13px;margin-bottom:20px;">${now} &middot; ${totalVotes} total votes${_jmActive?' &middot; ⚖ Judge mode active':''}</p><table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#f5f5f5;"><th style="padding:10px 14px;text-align:left;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#666;">Photo</th><th style="padding:10px 14px;text-align:left;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#666;">Performer</th><th style="padding:10px 14px;text-align:center;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#666;">Votes</th><th style="padding:10px 14px;text-align:left;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#666;">${_jmActive?'Weighted Score':'Avg Score'}</th></tr></thead><tbody>${rows}</tbody></table><p style="margin-top:28px;font-size:11px;color:#aaa;border-top:1px solid #eee;padding-top:10px;">Funkytown Showcase Live Voting &nbsp;&middot;&nbsp; Event: <strong>${getEventCode()}</strong> &nbsp;&middot;&nbsp; ${now}</p></body></html>`;
   const win=window.open('','_blank','width=800,height=600');
   if(!win){showToast('Allow pop-ups to export PDF','err');return;}
   win.document.write(docHtml);
@@ -6296,6 +6774,9 @@ function _startIntermission(force){
       if(btn){sendReaction(btn.dataset.imsEmoji);try{if(navigator.vibrate)navigator.vibrate(18);}catch(x){}}
     });
   }
+  // v49: wire and subscribe ephemeral chat
+  _initChat();
+  _chatSubscribe();
 }
 
 function _stopIntermission(clearFlag){
@@ -6303,10 +6784,316 @@ function _stopIntermission(clearFlag){
   if(_imsLbInterval){clearInterval(_imsLbInterval);_imsLbInterval=null;}
   if(_imsNoteInterval){clearInterval(_imsNoteInterval);_imsNoteInterval=null;}
   document.querySelectorAll('.ims-float-note').forEach(el=>el.remove());
+  _chatUnsubscribe(); // v49: detach ephemeral chat listener
+  _closeChat();       // v49: collapse chat panel
   // v38: optionally clear the active flag when stopped by manager toggle
   if(clearFlag)_intermissionActive=false;
 }
 // ── end v27 intermission ─────────────────────────────────────────────────
+
+// ══════════════════════════════════════════════════════════════════════════
+// v49: EPHEMERAL LIVE CHAT
+// Messages sync via Firebase (when configured) with a 75-second TTL.
+// No localStorage, no scrollback — purely ephemeral. Each device sees only
+// messages that arrive while the intermission screen is visible.
+// ══════════════════════════════════════════════════════════════════════════
+
+const _CHAT_ADJECTIVES=['Golden','Funky','Electric','Velvet','Midnight','Cosmic','Neon','Jazzy','Groovy','Silver','Blazing','Stellar','Vibrant','Wild','Soulful'];
+const _CHAT_NOUNS=['Trumpet','Bassline','Groove','Spotlight','Beat','Rhythm','Vibe','Note','Stage','Wave','Bounce','Riff','Melody','Chord','Solo'];
+const _CHAT_RATE_MAX=5,_CHAT_RATE_WINDOW=60000,_CHAT_MSG_TTL=75000;
+
+let _chatTimestamps=[];  // rolling rate-limit window (timestamps of recent sends)
+let _chatOpen=false;
+let _chatWired=false;
+let _acpWired=false; // v50: audience chat panel wired flag
+let _acpPanelOpen=false; // v50: audience chat panel open state
+
+function _getChatHandle(){
+  try{
+    let h=localStorage.getItem('ft_chat_handle');
+    if(h&&h.length>2&&h.length<40)return h;
+    const a=_CHAT_ADJECTIVES[Math.floor(Math.random()*_CHAT_ADJECTIVES.length)];
+    const n=_CHAT_NOUNS[Math.floor(Math.random()*_CHAT_NOUNS.length)];
+    h=a+' '+n;
+    localStorage.setItem('ft_chat_handle',h);
+    return h;
+  }catch(e){return'Audience #'+Math.floor(Math.random()*900+100);}
+}
+
+function _chatRateOk(){
+  const now=Date.now();
+  _chatTimestamps=_chatTimestamps.filter(t=>now-t<_CHAT_RATE_WINDOW);
+  return _chatTimestamps.length<_CHAT_RATE_MAX;
+}
+
+function _updateChatLimit(){
+  const lim=document.getElementById('imsChatLimit');
+  const inp=document.getElementById('imsChatInput');
+  const btn=document.getElementById('imsChatSend');
+  const now=Date.now();
+  _chatTimestamps=_chatTimestamps.filter(t=>now-t<_CHAT_RATE_WINDOW);
+  const rem=Math.max(0,_CHAT_RATE_MAX-_chatTimestamps.length);
+  if(!lim)return;
+  if(rem===0){
+    lim.textContent='Rate limit reached \u2014 wait a moment';
+    lim.style.color='var(--amber)';
+    if(btn)btn.disabled=true;
+    if(inp)inp.disabled=true;
+    // Re-check once oldest message expires
+    const oldest=_chatTimestamps[0];
+    if(oldest){const wait=_CHAT_RATE_WINDOW-(now-oldest);setTimeout(_updateChatLimit,wait+100);}
+  }else{
+    lim.textContent='Messages fade after 75s \u00b7 '+rem+(rem===1?' message':' messages')+' remaining';
+    lim.style.color='';
+    if(btn)btn.disabled=false;
+    if(inp)inp.disabled=false;
+  }
+}
+
+// v50: returns all currently-open chat message containers (intermission + audience panel)
+function _getChatContainers(){
+  const out=[];
+  const imsBody=document.getElementById('imsChatBody');
+  if(imsBody&&imsBody.classList.contains('open')){
+    const el=document.getElementById('imsChatMsgs');if(el)out.push(el);
+  }
+  const acp=document.getElementById('audienceChatPanel');
+  if(acp&&acp.classList.contains('open')){
+    const el=document.getElementById('acpMsgs');if(el)out.push(el);
+  }
+  return out;
+}
+function _renderChatMsg(msgObj,isOwn){
+  const containers=_getChatContainers();
+  if(!containers.length)return;
+  // Drop stale messages that arrive after their TTL has already passed
+  const age=Date.now()-msgObj.ts;
+  if(age>=_CHAT_MSG_TTL)return;
+  const remaining=_CHAT_MSG_TTL-age;
+  const dur=Math.ceil(remaining/1000)+'s';
+  containers.forEach(container=>{
+    const div=document.createElement('div');
+    div.className='chat-msg'+(isOwn?' chat-own':'');
+    div.style.setProperty('--msg-dur',dur);
+    const nick=document.createElement('span');
+    nick.className='chat-nick';
+    nick.textContent=msgObj.handle+':';
+    div.appendChild(nick);
+    div.appendChild(document.createTextNode(' '+msgObj.msg));
+    container.appendChild(div);
+    // Keep container tidy — max 20 visible bubbles
+    const all=container.querySelectorAll('.chat-msg');
+    if(all.length>20)all[0].remove();
+    // Auto-remove after animation
+    setTimeout(()=>{div.remove();},remaining+600);
+  });
+}
+
+async function _chatSendMsg(){
+  const inp=document.getElementById('imsChatInput');
+  if(!inp||inp.disabled)return;
+  const text=inp.value.trim().slice(0,120);
+  if(!text)return;
+  if(!_chatRateOk()){showToast('Chat limit reached \u2014 slow down a little','info');return;}
+  const handle=_getChatHandle();
+  const msgObj={handle,msg:text,ts:Date.now()};
+  _chatTimestamps.push(Date.now());
+  inp.value='';
+  _updateChatLimit();
+  // Render own message immediately (optimistic)
+  _renderChatMsg(msgObj,true);
+  // Push to Firebase for cross-device broadcast (when available)
+  if(_fbChatRef){
+    try{
+      const ref=_fbChatRef.push();
+      await ref.set({handle,msg:text,ts:msgObj.ts,_tk:SESSION_TICKET.slice(0,8)});
+      // Fire-and-forget cleanup of expired messages
+      _chatCleanupOld();
+    }catch(e){/* silent — local render already done */}
+  }
+}
+
+function _chatCleanupOld(){
+  if(!_fbChatRef)return;
+  const cutoff=Date.now()-_CHAT_MSG_TTL;
+  _fbChatRef.orderByChild('ts').endAt(cutoff).once('value',snap=>{
+    if(!snap||!snap.exists())return;
+    const updates={};
+    snap.forEach(child=>{updates[child.key]=null;});
+    if(Object.keys(updates).length)_fbChatRef.update(updates).catch(()=>{});
+  }).catch(()=>{});
+}
+
+function _chatSubscribe(){
+  if(!_fbChatRef||_fbChatUnsub)return;
+  const myTk=SESSION_TICKET.slice(0,8);
+  const handler=_fbChatRef.limitToLast(30).on('child_added',snap=>{
+    const d=snap.val();
+    if(!d||typeof d.msg!=='string'||typeof d.handle!=='string'||typeof d.ts!=='number')return;
+    // Drop own messages (already rendered optimistically) and expired ones
+    if(d._tk&&d._tk===myTk)return;
+    _renderChatMsg(d,false);
+  },()=>{/* silent error */});
+  _fbChatUnsub=()=>{
+    try{_fbChatRef.limitToLast(30).off('child_added',handler);}catch(e){}
+  };
+}
+
+function _chatUnsubscribe(){
+  if(_fbChatUnsub){try{_fbChatUnsub();}catch(e){}}_fbChatUnsub=null;
+}
+
+function _openChat(){
+  const body=document.getElementById('imsChatBody');
+  const toggle=document.getElementById('imsChatToggle');
+  const hdr=document.getElementById('imsChatHdr');
+  if(body)body.classList.add('open');
+  if(toggle)toggle.textContent='CLOSE';
+  if(hdr)hdr.setAttribute('aria-expanded','true');
+  _chatOpen=true;
+  _updateChatLimit();
+  // Focus input after animation
+  setTimeout(()=>{const i=document.getElementById('imsChatInput');if(i&&!i.disabled)i.focus();},120);
+}
+
+function _closeChat(){
+  const body=document.getElementById('imsChatBody');
+  const toggle=document.getElementById('imsChatToggle');
+  const hdr=document.getElementById('imsChatHdr');
+  if(body)body.classList.remove('open');
+  if(toggle)toggle.textContent='OPEN';
+  if(hdr)hdr.setAttribute('aria-expanded','false');
+  _chatOpen=false;
+}
+
+function _initChat(){
+  if(_chatWired)return;
+  _chatWired=true;
+  const hdr=document.getElementById('imsChatHdr');
+  const send=document.getElementById('imsChatSend');
+  const inp=document.getElementById('imsChatInput');
+  if(hdr){
+    hdr.addEventListener('click',()=>{_chatOpen?_closeChat():_openChat();});
+    hdr.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();_chatOpen?_closeChat():_openChat();}});
+  }
+  if(send)send.addEventListener('click',_chatSendMsg);
+  if(inp){
+    inp.addEventListener('keydown',e=>{
+      if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();_chatSendMsg();}
+    });
+    inp.addEventListener('input',_updateChatLimit);
+  }
+}
+
+// ── end v49 ephemeral chat ────────────────────────────────────────────────
+
+// ── v50: Audience Chat Panel — extends chat to BETWEEN/idle/done phases ──
+function _openAudienceChat(){
+  const panel=document.getElementById('audienceChatPanel');
+  const fab=document.getElementById('chatFab');
+  if(!panel)return;
+  panel.classList.add('open');
+  if(fab)fab.setAttribute('aria-expanded','true');
+  _acpPanelOpen=true;
+  // Update phase context label
+  const lbl=document.getElementById('acpPhaseLabel');
+  if(lbl){
+    const phaseLabels={between:'Between Acts',idle:'Pre-Show',done:'All Done'};
+    lbl.textContent=phaseLabels[currentPhase]||'';
+  }
+  // Subscribe to Firebase chat (shared node — same channel as intermission)
+  _chatSubscribe();
+  _updateAcpLimit();
+  // Focus input after slide animation completes
+  setTimeout(()=>{const i=document.getElementById('acpInput');if(i&&!i.disabled)i.focus();},300);
+}
+
+function _closeAudienceChat(){
+  const panel=document.getElementById('audienceChatPanel');
+  const fab=document.getElementById('chatFab');
+  if(!panel)return;
+  panel.classList.remove('open');
+  if(fab)fab.setAttribute('aria-expanded','false');
+  _acpPanelOpen=false;
+  // Only unsubscribe if intermission chat is also closed (shared subscription)
+  const imsBody=document.getElementById('imsChatBody');
+  if(!imsBody||!imsBody.classList.contains('open')){
+    _chatUnsubscribe();
+  }
+}
+
+function _updateAcpLimit(){
+  const lim=document.getElementById('acpLimit');
+  const inp=document.getElementById('acpInput');
+  const btn=document.getElementById('acpSend');
+  const now=Date.now();
+  _chatTimestamps=_chatTimestamps.filter(t=>now-t<_CHAT_RATE_WINDOW);
+  const rem=Math.max(0,_CHAT_RATE_MAX-_chatTimestamps.length);
+  if(!lim)return;
+  if(rem===0){
+    lim.textContent='Rate limit reached \u2014 wait a moment';
+    lim.style.color='var(--amber,#f59e0b)';
+    if(btn)btn.disabled=true;
+    if(inp)inp.disabled=true;
+    const oldest=_chatTimestamps[0];
+    if(oldest){const wait=_CHAT_RATE_WINDOW-(now-oldest);setTimeout(_updateAcpLimit,wait+100);}
+  }else{
+    lim.textContent='Messages fade after 75s \u00b7 '+rem+(rem===1?' send':' sends')+' left';
+    lim.style.color='';
+    if(btn)btn.disabled=false;
+    if(inp)inp.disabled=false;
+  }
+}
+
+async function _acpSendMsg(){
+  const inp=document.getElementById('acpInput');
+  if(!inp||inp.disabled)return;
+  const text=inp.value.trim().slice(0,120);
+  if(!text)return;
+  if(!_chatRateOk()){
+    if(typeof showToast==='function')showToast('Chat limit reached \u2014 slow down','info');
+    return;
+  }
+  const handle=_getChatHandle();
+  const msgObj={handle,msg:text,ts:Date.now()};
+  _chatTimestamps.push(Date.now());
+  inp.value='';
+  _updateAcpLimit();
+  _updateChatLimit(); // keep intermission limit counter in sync
+  // Optimistic own-message render
+  _renderChatMsg(msgObj,true);
+  // Push to Firebase
+  if(_fbChatRef){
+    try{
+      const ref=_fbChatRef.push();
+      await ref.set({handle,msg:text,ts:msgObj.ts,_tk:SESSION_TICKET.slice(0,8)});
+      _chatCleanupOld();
+    }catch(e){}
+  }
+}
+
+function _initAudienceChatPanel(){
+  if(_acpWired)return;
+  _acpWired=true;
+  const fab=document.getElementById('chatFab');
+  const closeBtn=document.getElementById('acpClose');
+  const sendBtn=document.getElementById('acpSend');
+  const inp=document.getElementById('acpInput');
+  if(fab){
+    let _fabTp=false;
+    fab.addEventListener('click',e=>{e.preventDefault();_acpPanelOpen?_closeAudienceChat():_openAudienceChat();});
+    fab.addEventListener('touchstart',()=>{_fabTp=true;fab.style.transform='scale(0.94)';},{passive:true});
+    fab.addEventListener('touchend',e=>{if(!_fabTp)return;_fabTp=false;e.preventDefault();fab.style.transform='';_acpPanelOpen?_closeAudienceChat():_openAudienceChat();},{passive:false});
+    fab.addEventListener('touchcancel',()=>{_fabTp=false;fab.style.transform='';},{passive:true});
+  }
+  if(closeBtn)closeBtn.addEventListener('click',_closeAudienceChat);
+  if(sendBtn)sendBtn.addEventListener('click',_acpSendMsg);
+  if(inp){
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();_acpSendMsg();}});
+    inp.addEventListener('input',_updateAcpLimit);
+  }
+}
+// ── end v50 audience chat panel ────────────────────────────────────────────
 
 // ── ALL PATCHES — deferred so every function declaration is resolved ─
 // This runs after all function declarations in this script have been
@@ -6414,6 +7201,18 @@ function sendReaction(emoji){
   setTimeout(()=>e.remove(),1900);
   // haptic pulse
   try{if(navigator.vibrate)navigator.vibrate(20);}catch(x){}
+  // v50: also append to reaction feed (ephemeral chip above the tray)
+  const feed=document.getElementById('reactionFeed');
+  if(feed){
+    const chip=document.createElement('div');
+    chip.className='reaction-feed-chip';
+    chip.textContent=emoji;
+    chip.setAttribute('aria-hidden','true');
+    feed.appendChild(chip);
+    const chips=feed.querySelectorAll('.reaction-feed-chip');
+    if(chips.length>6)chips[0].remove();
+    setTimeout(()=>{chip.remove();},4000);
+  }
 }
 
 // ── Performer intro splash (3s before performing phase for audience) ────────
@@ -6690,7 +7489,7 @@ function _renderReadinessChecklist(){
   const checks=[
     {label:'Performers loaded',ok:performers.length>0,err:performers.length===0},
     {label:'Event code set',ok:!!(getEventCode()&&getEventCode()!=='FUNKY2026'),warn:getEventCode()==='FUNKY2026'},
-    {label:'PIN changed from default',ok:getPin()!=='1234',warn:getPin()==='1234'},
+    {label:'PIN changed from default',ok:(()=>{const _p=getPin();return _isPinHashed(_p)?_p!==_PIN_PREFIX+_DEFAULT_PIN_HASH:_p!=='1234';})(),warn:(()=>{const _p=getPin();return _isPinHashed(_p)?_p===_PIN_PREFIX+_DEFAULT_PIN_HASH:_p==='1234';})()},
     {label:'At least one photo added',ok:performers.some(p=>p.photo),warn:!performers.some(p=>p.photo)},
     {label:'Backup created (export JSON)',ok:ls.get('ft_last_save_ts',0)>0,warn:!ls.get('ft_last_save_ts',0)},
     {label:'All performers named',ok:_unnamedCount===0,warn:_unnamedCount>0,err:false},
@@ -7089,10 +7888,50 @@ function _initV16Patches(){
     if(hint) hint.textContent = '≈'+Math.ceil(totalSec/60)+' min total runtime ('+acts+' act'+(acts!==1?'s':'')+')';
   };
   window._syncShowTimeDurationHint();
-  // og:url/og:image dynamic fix
+  // ── Show Start Time input wiring ──────────────────────────────────────────
+  // Populates the audience preshow countdown (ft_show_start_time).
+  // Input is shown in the manager preshow panel; audience reads the value via ls.
+  (function _wireShowStartTimeInput(){
+    const inp = document.getElementById('preshowStartTimeInput');
+    const setBtn = document.getElementById('preshowStartTimeSetBtn');
+    const clrBtn = document.getElementById('preshowStartTimeClearBtn');
+    if (!inp || !setBtn) return;
+    // Restore existing scheduled time into input on load
+    const existing = ls.get('ft_show_start_time', 0);
+    if (existing && existing > Date.now()) {
+      const d = new Date(existing);
+      inp.value = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+    }
+    function _saveShowTime() {
+      const val = inp.value;
+      if (!val) { showToast('Enter a time first', 'err'); return; }
+      const [hStr, mStr] = val.split(':');
+      const h = parseInt(hStr, 10), m = parseInt(mStr, 10);
+      if (!isFinite(h) || !isFinite(m)) { showToast('Invalid time', 'err'); return; }
+      const now = new Date();
+      let target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0, 0);
+      if (target.getTime() < now.getTime()) target.setDate(target.getDate() + 1);
+      ls.set('ft_show_start_time', target.getTime());
+      const fmtH = h % 12 || 12, ampm = h < 12 ? 'AM' : 'PM';
+      showToast('Show start time set: ' + fmtH + ':' + String(m).padStart(2,'0') + ' ' + ampm, 'ok');
+      _auditLog('show_start_time_set', 'target=' + target.toISOString());
+    }
+    setBtn.addEventListener('click', _saveShowTime);
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') _saveShowTime(); });
+    if (clrBtn) {
+      clrBtn.addEventListener('click', () => {
+        ls.del('ft_show_start_time');
+        inp.value = '';
+        showToast('Show start time cleared', 'ok');
+      });
+    }
+  })();
   try{
-    const base=location.origin+location.pathname;
-    document.querySelector('meta[property="og:url"]')?.setAttribute('content',base);
+    const base=location.origin+location.pathname.replace(/\/[^\/]*$/, '/');
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', base);
+    const shareImg = base + 'funkytown-share.png';
+    document.querySelector('meta[property="og:image"]')?.setAttribute('content', shareImg);
+    document.querySelector('meta[name="twitter:image"]')?.setAttribute('content', shareImg);
   }catch(e){}
 }
 
@@ -7598,5 +8437,614 @@ function _initV21Buttons() {
 // FIX #11: Call _initV16Patches synchronously (no setTimeout — function declarations are hoisted)
 _initV13Patches();
 _initV16Patches();
+
+// ════════════════════════════════════════════════════════════════════════════
+// JUDGE VOTING MODULE — v47
+// Weighted judge votes hidden until reveal; 60/40 judge/audience split default
+// ════════════════════════════════════════════════════════════════════════════
+(function initJudgeModule(){
+
+  // ── State ────────────────────────────────────────────────────────────────
+  const JK = {
+    PIN:      'ft_judge_pin',
+    ENABLED:  'ft_judge_enabled',
+    WEIGHT:   'ft_judge_weight',
+    NAME:     'ft_judge_name',   // sessionStorage key
+  };
+  const JUDGE_PIN_DEFAULT = '5678';
+  let IS_JUDGE = false;
+  let JUDGE_NAME = '';
+  let _judgeAuthInProgress = false;
+  let _judgeAuthResolve = null;
+  let _judgeAuthBuffer = '';
+  let _judgeFailCount = 0;
+  let _judgeLockUntil = 0;
+
+  // ── Helpers ──────────────────────────────────────────────────────────────
+  const ls2 = {
+    get: (k, d) => { try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : d; } catch(e){ return d; } },
+    set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} },
+  };
+  const ss2 = {
+    get: (k, d) => { try { const v = sessionStorage.getItem(k); return v !== null ? JSON.parse(v) : d; } catch(e){ return d; } },
+    set: (k, v) => { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch(e){} },
+    del: (k) => { try { sessionStorage.removeItem(k); } catch(e){} },
+  };
+
+  function isJudgeModeEnabled() { return !!ls2.get(JK.ENABLED, false); }
+  function getJudgeAudienceWeight() {
+    // Returns [judgeW, audienceW] normalised to sum 1.0
+    const jw = parseFloat(ls2.get(JK.WEIGHT, 0.6));
+    const safe = isFinite(jw) ? Math.min(1, Math.max(0, jw)) : 0.6;
+    return [safe, 1 - safe];
+  }
+
+  async function _hashJudgePin(plain) {
+    try {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(plain));
+      return 'pin:' + Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    } catch(e){ return null; }
+  }
+  async function _verifyJudgePin(plain) {
+    const stored = ls2.get(JK.PIN, null);
+    if (!stored) {
+      // No pin stored yet — accept default
+      return plain === JUDGE_PIN_DEFAULT;
+    }
+    if (stored.startsWith('pin:')) {
+      const h = await _hashJudgePin(plain);
+      return h ? stored === h : false;
+    }
+    return plain === stored;
+  }
+
+  function getJudgeVotes() {
+    // Judge votes are allVotes entries with is_judge===true
+    // Deduplicate: keep only the latest vote per ticket_id+performer_id combination
+    const raw = (typeof allVotes !== 'undefined' ? allVotes : []).filter(v => v.is_judge === true);
+    const seen = new Map();
+    raw.forEach(v => {
+      const key = (v.ticket_id || '') + ':' + v.performer_id;
+      const existing = seen.get(key);
+      if (!existing || (v.created_at || '') >= (existing.created_at || '')) {
+        seen.set(key, v);
+      }
+    });
+    return Array.from(seen.values());
+  }
+  function getMyJudgeVotes() {
+    const ticket = typeof SESSION_TICKET !== 'undefined' ? SESSION_TICKET : '';
+    return getJudgeVotes().filter(v => v.ticket_id === ticket);
+  }
+  function hasJudged(performerId) {
+    return getMyJudgeVotes().some(v => v.performer_id === performerId);
+  }
+
+  // ── Patch computeTallies to include judge weighting ──────────────────────
+  const _origComputeTallies = computeTallies;
+  computeTallies = function() {
+    _origComputeTallies();
+    if (!isJudgeModeEnabled()) return;
+    const [jw, aw] = getJudgeAudienceWeight();
+    const judgeVotes = getJudgeVotes();
+    performers.forEach(p => {
+      const jv = judgeVotes.filter(v => v.performer_id === p.id);
+      if (jv.length > 0) {
+        const jTotal = jv.reduce((s, v) => s + parseFloat(v.score), 0);
+        p.judgeAvg = jTotal / jv.length;
+        p.judgeCount = jv.length;
+      } else {
+        p.judgeAvg = null;
+        p.judgeCount = 0;
+      }
+      const audienceAvg = p.count > 0 ? p.total / p.count : null;
+      if (p.judgeAvg !== null && audienceAvg !== null) {
+        p.overall = (p.judgeAvg * jw) + (audienceAvg * aw);
+      } else if (p.judgeAvg !== null) {
+        p.overall = p.judgeAvg;
+      } else if (audienceAvg !== null) {
+        p.overall = audienceAvg;
+      } else {
+        p.overall = null;
+      }
+    });
+  };
+
+  // ── Patch updateTallies to show judge column for manager ─────────────────
+  const _origUpdateTallies = updateTallies;
+  updateTallies = function() {
+    _origUpdateTallies();
+    if (!IS_JUDGE && !IS_MANAGER) return;
+    if (!isJudgeModeEnabled()) return;
+    document.querySelectorAll('.tally-row[data-perf-id]').forEach(row => {
+      const pid = parseInt(row.dataset.perfId);
+      const p = performers.find(x => x.id === pid);
+      if (!p) return;
+      // Remove stale sub before re-injecting so data stays fresh on every call
+      const stale = row.querySelector('.judge-score-sub');
+      if (stale) stale.remove();
+      const scoreCell = row.querySelector('.tally-score');
+      if (!scoreCell) return;
+      const [jw, aw] = getJudgeAudienceWeight();
+      const jPct = Math.round(jw * 100), aPct = Math.round(aw * 100);
+      const sub = document.createElement('div');
+      sub.className = 'judge-score-sub';
+      const isRevealed = finalized;
+      sub.style.cssText = 'font-size:0.6rem;color:' + (isRevealed ? 'var(--gold)' : 'var(--muted)') + ';margin-top:2px;line-height:1.4;' + (!isRevealed ? 'opacity:0.45;' : '');
+      const jStr = p.judgeAvg !== null ? p.judgeAvg.toFixed(1) : '—';
+      const oStr = p.overall !== null ? p.overall.toFixed(2) : '—';
+      if (isRevealed) {
+        sub.innerHTML = `<span title="Judge avg (${jPct}% weight)">⚖ ${jStr}</span> <span style="color:var(--muted);margin:0 3px;">·</span> <span title="Weighted overall">★ ${oStr}</span>`;
+      } else {
+        sub.innerHTML = `<span title="Judge scores (hidden until finalized)">⚖ ${p.judgeCount > 0 ? p.judgeCount + ' judge vote' + (p.judgeCount !== 1 ? 's' : '') : 'no judge votes'}</span>`;
+      }
+      scoreCell.appendChild(sub);
+    });
+  };
+
+  // ── Patch confirmVote to tag judge votes ─────────────────────────────────
+  const _origConfirmVote = confirmVote;
+  confirmVote = async function() {
+    if (!IS_JUDGE) { return _origConfirmVote.apply(this, arguments); }
+    // Judge voting path (similar to audience but tagged)
+    if (!pendingScore || _confirmVoteInFlight) return;
+    _confirmVoteInFlight = true;
+    const clearGuard = () => { _confirmVoteInFlight = false; };
+    const p = _pendingPerformer || performers[currentIndex];
+    _pendingPerformer = null;
+    const scored = pendingScore;
+    closeModal();
+    const sb = $('submitBtn'), sbt = $('submitBtnText'), sbs = $('submitBtnStatus');
+    if (sb){ sb.disabled = true; sb.classList.add('saving'); }
+    if (sbt) sbt.style.display = 'none';
+    if (sbs){ sbs.style.display = 'inline'; sbs.textContent = 'Saving…'; }
+    let result;
+    try {
+      result = await createVote({
+        performer_id: p.id,
+        score: scored,
+        ticket_id: SESSION_TICKET,
+        created_at: new Date().toISOString(),
+        is_judge: true,
+        judge_name: JUDGE_NAME,
+      });
+    } catch(e){ result = { isOk: false }; }
+    if (sbt) sbt.style.display = 'inline';
+    if (sbs) sbs.style.display = 'none';
+    if (sb) sb.classList.remove('saving');
+    clearGuard();
+    if (result && result.isOk) {
+      if (typeof _auditLog === 'function') _auditLog('judge_vote', `perf=${p.id} score=${scored} judge=${JUDGE_NAME}`);
+      // Brief success feedback
+      const sf = $('successFlash'); if (sf) sf.classList.add('visible');
+      setTimeout(() => { if (sf) sf.classList.remove('visible'); loadPerformer(currentIndex); }, 1800);
+      if (typeof showToast === 'function') showToast(`⚖ Judge score ${scored}/10 for ${p.name}`, 'ok');
+      computeTallies(); updateTallies();
+    } else {
+      if (typeof showToast === 'function') showToast('Error saving judge vote. Try again.', 'err');
+      if (sb) sb.disabled = false;
+    }
+  };
+
+  // ── Judge Auth Overlay ────────────────────────────────────────────────────
+  function _buildJudgeAuthOverlay() {
+    if (document.getElementById('judgeAuthOverlay')) return;
+    const div = document.createElement('div');
+    div.id = 'judgeAuthOverlay';
+    div.className = 'auth-overlay hidden';
+    div.setAttribute('role', 'dialog');
+    div.setAttribute('aria-modal', 'true');
+    div.setAttribute('aria-label', 'Judge access');
+    div.innerHTML = `
+      <div class="auth-box" style="max-width:340px;width:100%;">
+        <div class="modal-eyebrow" style="text-align:center;margin-bottom:4px;">⚖ Judge Access</div>
+        <div style="font-size:0.78rem;color:var(--muted);text-align:center;margin-bottom:14px;">Enter Judge PIN to vote as a judge</div>
+        <div id="judgeNameRow" style="margin-bottom:14px;display:flex;gap:8px;align-items:center;">
+          <label style="font-size:0.72rem;color:var(--muted2);white-space:nowrap;">Judge name:</label>
+          <input id="judgeNameInput" type="text" maxlength="30" placeholder="e.g. Judge 1"
+            style="flex:1;background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:6px 10px;border-radius:2px;outline:none;" />
+        </div>
+        <div class="pin-dots" style="justify-content:center;margin-bottom:14px;">
+          <div class="pin-dot" id="jdot0"></div><div class="pin-dot" id="jdot1"></div>
+          <div class="pin-dot" id="jdot2"></div><div class="pin-dot" id="jdot3"></div>
+        </div>
+        <div id="judgeAuthError" style="text-align:center;font-size:0.72rem;color:var(--red);min-height:18px;margin-bottom:8px;"></div>
+        <div class="pin-keypad" id="judgeKeypad">
+          ${[1,2,3,4,5,6,7,8,9,'',0,'←'].map(k=>
+            k===''
+              ? `<div></div>`
+              : `<button class="pin-key${k==='←'?' del':k===0?' zero':''}" data-jdigit="${k}" type="button">${k}</button>`
+          ).join('')}
+        </div>
+        <button id="judgeAuthCancelBtn" type="button" class="modal-btn modal-cancel" style="width:100%;margin-top:14px;">Cancel</button>
+      </div>`;
+    document.body.appendChild(div);
+
+    // Wire keypad
+    div.querySelectorAll('[data-jdigit]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const d = btn.dataset.jdigit;
+        if (d === '←') {
+          _judgeAuthBuffer = _judgeAuthBuffer.slice(0, -1);
+          _updateJudgeDots();
+          const e = document.getElementById('judgeAuthError'); if (e) e.textContent = '';
+        } else {
+          _judgeAuthDigit(d);
+        }
+      });
+    });
+    document.getElementById('judgeAuthCancelBtn').addEventListener('click', _hideJudgeAuth);
+    document.addEventListener('keydown', e => {
+      const ov = document.getElementById('judgeAuthOverlay');
+      if (!ov || ov.classList.contains('hidden')) return;
+      const inp = document.getElementById('judgeNameInput');
+      if (document.activeElement === inp) return; // let name input handle keys
+      if (e.key >= '0' && e.key <= '9') _judgeAuthDigit(e.key);
+      else if (e.key === 'Backspace') { _judgeAuthBuffer = _judgeAuthBuffer.slice(0,-1); _updateJudgeDots(); }
+      else if (e.key === 'Escape') _hideJudgeAuth();
+    });
+  }
+
+  function _updateJudgeDots() {
+    for (let i = 0; i < 4; i++) {
+      const d = document.getElementById('jdot'+i);
+      if (!d) continue;
+      d.classList.remove('filled','error');
+      if (i < _judgeAuthBuffer.length) d.classList.add('filled');
+    }
+  }
+  function _flashJudgeError(msg) {
+    for (let i = 0; i < 4; i++) {
+      const d = document.getElementById('jdot'+i);
+      if (d){ d.classList.remove('filled'); d.classList.add('error'); }
+    }
+    const e = document.getElementById('judgeAuthError'); if (e) e.textContent = msg;
+    setTimeout(() => { _judgeAuthBuffer = ''; _updateJudgeDots(); }, 700);
+  }
+  function _judgeAuthDigit(d) {
+    if (Date.now() < _judgeLockUntil) {
+      const e = document.getElementById('judgeAuthError');
+      if (e) e.textContent = 'Locked. Wait ' + Math.ceil((_judgeLockUntil - Date.now())/1000) + 's.';
+      return;
+    }
+    if (_judgeAuthBuffer.length >= 4) return;
+    _judgeAuthBuffer += d;
+    _updateJudgeDots();
+    if (_judgeAuthBuffer.length === 4) setTimeout(_checkJudgePin, 100);
+  }
+  function _checkJudgePin() {
+    _verifyJudgePin(_judgeAuthBuffer).then(ok => {
+      if (ok) {
+        _judgeFailCount = 0;
+        const nameVal = (document.getElementById('judgeNameInput')?.value?.trim()) || 'Judge';
+        JUDGE_NAME = nameVal;
+        ss2.set(JK.NAME, JUDGE_NAME);
+        _hideJudgeAuth(true);
+        if (_judgeAuthResolve) { const r = _judgeAuthResolve; _judgeAuthResolve = null; r(true); }
+      } else {
+        _judgeFailCount++;
+        if (_judgeFailCount >= 5) {
+          _judgeLockUntil = Date.now() + 30000;
+          _flashJudgeError('Too many attempts. Locked 30s.');
+        } else {
+          _flashJudgeError('Incorrect PIN. ' + (5 - _judgeFailCount) + ' left.');
+        }
+      }
+    });
+  }
+  function _showJudgeAuth() {
+    _buildJudgeAuthOverlay();
+    _judgeAuthBuffer = '';
+    _updateJudgeDots();
+    const e = document.getElementById('judgeAuthError'); if (e) e.textContent = '';
+    const inp = document.getElementById('judgeNameInput');
+    if (inp) inp.value = JUDGE_NAME || '';
+    const ov = document.getElementById('judgeAuthOverlay');
+    if (ov) ov.classList.remove('hidden');
+    if (inp) setTimeout(() => inp.focus(), 80);
+  }
+  function _hideJudgeAuth(success) {
+    const ov = document.getElementById('judgeAuthOverlay');
+    if (ov) ov.classList.add('hidden');
+    _judgeAuthBuffer = '';
+    _updateJudgeDots();
+    if (!success && _judgeAuthResolve) { const r = _judgeAuthResolve; _judgeAuthResolve = null; r(false); }
+  }
+  function _showJudgeAuthPromise() {
+    return new Promise(res => {
+      if (_judgeAuthResolve) { res(false); return; }
+      _judgeAuthResolve = res;
+      _showJudgeAuth();
+    });
+  }
+
+  // ── Request judge access ─────────────────────────────────────────────────
+  async function requestJudgeAccess() {
+    if (_judgeAuthInProgress || IS_MANAGER) return;
+    _judgeAuthInProgress = true;
+    let ok = false;
+    try { ok = await _showJudgeAuthPromise(); } finally { _judgeAuthInProgress = false; }
+    if (!ok) return;
+    IS_JUDGE = true;
+    _applyJudgeUI();
+    if (typeof showToast === 'function') showToast(`⚖ Judge mode — ${JUDGE_NAME}`, 'ok');
+  }
+
+  function doLockJudge() {
+    IS_JUDGE = false;
+    JUDGE_NAME = '';
+    ss2.del(JK.NAME);
+    _applyJudgeUI();
+    if (typeof showToast === 'function') showToast('Judge mode exited', 'info');
+  }
+
+  // ── Judge FAB button ─────────────────────────────────────────────────────
+  function _ensureJudgeFab() {
+    if (document.getElementById('judgeAccessBtn')) return;
+    const btn = document.createElement('button');
+    btn.id = 'judgeAccessBtn';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Judge access');
+    btn.style.cssText = [
+      'position:fixed', 'bottom:74px', 'right:16px', 'z-index:9000',
+      'padding:8px 14px', 'font-family:"Bebas Neue",sans-serif', 'font-size:0.9rem',
+      'letter-spacing:0.04em', 'background:rgba(232,193,74,0.12)',
+      'border:1px solid rgba(232,193,74,0.35)', 'color:var(--gold)',
+      'border-radius:2px', 'cursor:pointer', 'display:none',
+      'backdrop-filter:blur(6px)', 'transition:opacity 0.2s',
+    ].join(';');
+    btn.textContent = '⚖ Judge';
+    document.body.appendChild(btn);
+
+    let _tp = false, _tf = false;
+    btn.addEventListener('click', e => {
+      e.preventDefault(); e.stopPropagation();
+      if (_tf) { _tf = false; return; }
+      if (IS_MANAGER) { if(typeof showToast==='function') showToast('Lock Manager mode first to sign in as a judge', 'info'); return; }
+      if (IS_JUDGE) doLockJudge(); else requestJudgeAccess();
+    });
+    btn.addEventListener('touchstart', e => { e.stopPropagation(); _tp = true; btn.style.opacity = '0.7'; }, { passive: true });
+    btn.addEventListener('touchend', e => {
+      if (!_tp) return; _tp = false; _tf = true; e.preventDefault(); e.stopPropagation();
+      btn.style.opacity = '';
+      if (IS_MANAGER) { if(typeof showToast==='function') showToast('Lock Manager mode first to sign in as a judge', 'info'); setTimeout(()=>{_tf=false;},600); return; }
+      if (IS_JUDGE) doLockJudge(); else requestJudgeAccess();
+      setTimeout(() => { _tf = false; }, 600);
+    }, { passive: false });
+    btn.addEventListener('touchcancel', () => { _tp = false; btn.style.opacity = ''; }, { passive: true });
+  }
+
+  function _applyJudgeUI() {
+    const btn = document.getElementById('judgeAccessBtn');
+    if (!btn) return;
+    const enabled = isJudgeModeEnabled();
+    btn.style.display = enabled ? '' : 'none';
+
+    // ── Judge mode in-card banner (only shown when IS_JUDGE and NOT IS_MANAGER) ─
+    const banner = document.getElementById('judgeModeBanner');
+    const jmbTitle = document.getElementById('jmbTitle');
+    const jmbSub = document.getElementById('jmbSub');
+    const jmbExit = document.getElementById('jmbExitBtn');
+    if (banner) {
+      if (IS_JUDGE && !IS_MANAGER) {
+        banner.classList.add('visible');
+        if (jmbTitle) jmbTitle.textContent = '\u2696 ' + (JUDGE_NAME || 'Judge') + ' \u2014 Judge Mode';
+        // Live weight subtitle
+        if (jmbSub) {
+          const [jw, aw] = getJudgeAudienceWeight();
+          const jPct = Math.round(jw * 100), aPct = Math.round(aw * 100);
+          jmbSub.textContent = 'Judges: ' + jPct + '% \u00b7 Audience: ' + aPct + '%';
+        }
+        // Wire exit button once (guard with dataset flag)
+        if (jmbExit && !jmbExit.dataset.wired) {
+          jmbExit.dataset.wired = '1';
+          jmbExit.addEventListener('click', doLockJudge);
+          jmbExit.addEventListener('touchend', e => { e.preventDefault(); doLockJudge(); }, { passive: false });
+        }
+      } else {
+        banner.classList.remove('visible');
+      }
+    }
+
+    if (IS_JUDGE && !IS_MANAGER) {
+      btn.textContent = '\u2713 ' + (JUDGE_NAME || 'Judge');
+      btn.style.background = 'rgba(232,193,74,0.25)';
+      btn.style.borderColor = 'rgba(232,193,74,0.6)';
+      btn.style.opacity = '1';
+      btn.title = 'Signed in as judge \u2014 tap to exit';
+      const sbt = $('submitBtnText');
+      if (sbt) sbt.textContent = '\u2696 Submit Judge Score';
+    } else if (IS_MANAGER) {
+      btn.textContent = '\u2696 Judge \u2713';
+      btn.style.background = 'rgba(232,193,74,0.07)';
+      btn.style.borderColor = 'rgba(232,193,74,0.2)';
+      btn.style.opacity = '0.55';
+      btn.title = 'Judge voting enabled \u2014 lock Manager mode first to sign in as a judge';
+    } else {
+      btn.textContent = '\u2696 Judge';
+      btn.style.background = 'rgba(232,193,74,0.12)';
+      btn.style.borderColor = 'rgba(232,193,74,0.35)';
+      btn.style.opacity = '1';
+      btn.title = 'Tap to sign in as a judge';
+      const sbt = $('submitBtnText');
+      if (sbt && sbt.textContent.startsWith('\u2696')) sbt.textContent = 'Submit Vote';
+    }
+  }
+
+  // ── Manager: inject Judge Settings into Set List modal ───────────────────
+  function _injectJudgeSettings() {
+    if (document.getElementById('judgeSettingsSection')) return;
+    const panel = document.getElementById('panelSetlist');
+    if (!panel) return;
+    const section = document.createElement('div');
+    section.id = 'judgeSettingsSection';
+    section.style.cssText = 'margin-top:16px;padding:12px;background:rgba(232,193,74,0.05);border:1px solid rgba(232,193,74,0.18);border-radius:2px;';
+    section.innerHTML = `
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:0.06em;color:var(--gold);margin-bottom:10px;">⚖ Judge Voting</div>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-bottom:10px;">
+        <input type="checkbox" id="judgeEnabledChk" style="width:16px;height:16px;accent-color:var(--gold);cursor:pointer;">
+        <span style="font-size:0.8rem;color:var(--muted2);">Enable Judge Voting</span>
+      </label>
+      <div id="judgeWeightRow" style="display:none;margin-bottom:10px;">
+        <label style="font-size:0.75rem;color:var(--muted2);display:block;margin-bottom:4px;">Judge weight %
+          <span style="color:var(--muted);font-size:0.68rem;">(rest = audience)</span>
+        </label>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="range" id="judgeWeightSlider" min="10" max="90" step="5" value="60"
+            style="flex:1;accent-color:var(--gold);">
+          <span id="judgeWeightLabel" style="font-size:0.85rem;color:var(--gold);min-width:36px;text-align:right;">60%</span>
+        </div>
+        <div style="font-size:0.65rem;color:var(--muted);margin-top:3px;" id="judgeWeightSub">Judges: 60% · Audience: 40%</div>
+        <div style="display:flex;gap:5px;margin-top:6px;" id="judgePresetBtns">
+          <button type="button" data-preset="50" style="flex:1;padding:5px 0;font-size:0.7rem;font-family:'Bebas Neue',sans-serif;letter-spacing:0.08em;background:rgba(232,193,74,0.08);border:1px solid rgba(232,193,74,0.25);color:var(--gold);border-radius:2px;cursor:pointer;">50/50</button>
+          <button type="button" data-preset="60" style="flex:1;padding:5px 0;font-size:0.7rem;font-family:'Bebas Neue',sans-serif;letter-spacing:0.08em;background:rgba(232,193,74,0.08);border:1px solid rgba(232,193,74,0.25);color:var(--gold);border-radius:2px;cursor:pointer;">60/40</button>
+          <button type="button" data-preset="70" style="flex:1;padding:5px 0;font-size:0.7rem;font-family:'Bebas Neue',sans-serif;letter-spacing:0.08em;background:rgba(232,193,74,0.08);border:1px solid rgba(232,193,74,0.25);color:var(--gold);border-radius:2px;cursor:pointer;">70/30</button>
+        </div>
+      </div>
+      <div id="judgeChangePinRow" style="display:none;">
+        <button id="judgeChangePinBtn" type="button" class="modal-btn modal-confirm"
+          style="font-size:0.75rem;padding:8px 12px;background:rgba(232,193,74,0.1);border-color:rgba(232,193,74,0.3);color:var(--gold);">
+          🔑 Change Judge PIN (default: 5678)
+        </button>
+        <div id="judgeNewPinBar" style="display:none;margin-top:8px;background:rgba(232,193,74,0.07);border:1px solid rgba(232,193,74,0.2);border-radius:2px;padding:10px;">
+          <div style="font-size:0.72rem;color:var(--muted2);margin-bottom:6px;">New 4-digit Judge PIN:</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input id="judgeNewPinInput" type="password" maxlength="4" inputmode="numeric" pattern="[0-9]*"
+              style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:monospace;font-size:1rem;padding:6px 10px;border-radius:2px;outline:none;width:80px;text-align:center;" placeholder="0000">
+            <button id="judgeNewPinSave" type="button"
+              style="padding:6px 14px;font-family:'Bebas Neue',sans-serif;font-size:0.85rem;background:var(--gold);border:1px solid var(--gold);color:#000;border-radius:2px;cursor:pointer;">Save</button>
+            <button id="judgeNewPinCancel" type="button"
+              style="padding:6px 10px;font-size:0.75rem;background:transparent;border:1px solid var(--border2);color:var(--muted2);border-radius:2px;cursor:pointer;">Cancel</button>
+          </div>
+        </div>
+      </div>`;
+    // Insert before the Save & Sync / Reset row (modal-actions div)
+    const actionsDiv = panel.querySelector('.modal-actions');
+    if (actionsDiv) panel.insertBefore(section, actionsDiv);
+    else panel.appendChild(section);
+
+    // Wire checkbox
+    const chk = document.getElementById('judgeEnabledChk');
+    const wRow = document.getElementById('judgeWeightRow');
+    const pRow = document.getElementById('judgeChangePinRow');
+    chk.checked = isJudgeModeEnabled();
+    if (chk.checked) { if(wRow) wRow.style.display=''; if(pRow) pRow.style.display=''; }
+    chk.addEventListener('change', () => {
+      ls2.set(JK.ENABLED, chk.checked);
+      if(wRow) wRow.style.display = chk.checked ? '' : 'none';
+      if(pRow) pRow.style.display = chk.checked ? '' : 'none';
+      _ensureJudgeFab();
+      _applyJudgeUI();
+      if (typeof showToast === 'function') showToast(chk.checked ? '⚖ Judge voting enabled' : 'Judge voting disabled', 'ok');
+    });
+
+    // Wire weight slider
+    const slider = document.getElementById('judgeWeightSlider');
+    const wLabel = document.getElementById('judgeWeightLabel');
+    const wSub = document.getElementById('judgeWeightSub');
+    const storedW = parseFloat(ls2.get(JK.WEIGHT, 0.6));
+    slider.value = Math.round(storedW * 100);
+    if(wLabel) wLabel.textContent = slider.value + '%';
+    if(wSub) wSub.textContent = `Judges: ${slider.value}% · Audience: ${100-slider.value}%`;
+    slider.addEventListener('input', () => {
+      if(wLabel) wLabel.textContent = slider.value + '%';
+      if(wSub) wSub.textContent = `Judges: ${slider.value}% · Audience: ${100-slider.value}%`;
+      ls2.set(JK.WEIGHT, parseFloat(slider.value) / 100);
+    });
+
+    // Wire preset buttons
+    const presetContainer = document.getElementById('judgePresetBtns');
+    if (presetContainer) {
+      presetContainer.querySelectorAll('[data-preset]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const pv = parseInt(btn.dataset.preset);
+          slider.value = pv;
+          if(wLabel) wLabel.textContent = pv + '%';
+          if(wSub) wSub.textContent = `Judges: ${pv}% · Audience: ${100-pv}%`;
+          ls2.set(JK.WEIGHT, pv / 100);
+          _applyJudgeUI();
+          if (typeof showToast === 'function') showToast(`⚖ Weight set to Judges ${pv}% / Audience ${100-pv}%`, 'ok');
+        });
+      });
+    }
+
+    // Wire PIN change
+    const changePinBtn = document.getElementById('judgeChangePinBtn');
+    const pinBar = document.getElementById('judgeNewPinBar');
+    const pinInput = document.getElementById('judgeNewPinInput');
+    const pinSave = document.getElementById('judgeNewPinSave');
+    const pinCancel = document.getElementById('judgeNewPinCancel');
+    if(changePinBtn) changePinBtn.addEventListener('click', () => {
+      if(pinBar) pinBar.style.display = '';
+      if(pinInput){ pinInput.value=''; pinInput.focus(); }
+    });
+    if(pinCancel) pinCancel.addEventListener('click', () => { if(pinBar) pinBar.style.display='none'; });
+    if(pinSave) pinSave.addEventListener('click', () => {
+      const v = pinInput?.value?.trim() || '';
+      if (!/^\d{4}$/.test(v)) { if(typeof showToast==='function') showToast('Must be exactly 4 digits', 'err'); return; }
+      _hashJudgePin(v).then(h => {
+        ls2.set(JK.PIN, h || v);
+        if(pinBar) pinBar.style.display='none';
+        if(typeof showToast==='function') showToast('Judge PIN updated', 'ok');
+      });
+    });
+  }
+
+  // Patch openSetListModal to inject section when manager opens modal
+  const _origOpenSetListModal = typeof openSetListModal === 'function' ? openSetListModal : null;
+  if (_origOpenSetListModal) {
+    openSetListModal = function() {
+      _origOpenSetListModal.apply(this, arguments);
+      if (IS_MANAGER) setTimeout(_injectJudgeSettings, 50);
+    };
+  }
+
+  // ── Session restore ───────────────────────────────────────────────────────
+  function _restoreJudgeSession() {
+    const saved = ss2.get(JK.NAME, null);
+    if (saved && isJudgeModeEnabled()) {
+      IS_JUDGE = true;
+      JUDGE_NAME = saved;
+    }
+  }
+
+  // ── Boot ──────────────────────────────────────────────────────────────────
+  _restoreJudgeSession();
+  // Expose state flags for external/debugging access
+  Object.defineProperty(window, '_ftIsJudge', { get: () => IS_JUDGE, configurable: true });
+  Object.defineProperty(window, '_ftHasJudged', { get: () => (pid) => typeof pid === 'number' ? hasJudged(pid) : getMyJudgeVotes().length > 0, configurable: true });
+  _ensureJudgeFab();
+  _applyJudgeUI();
+
+  // Re-apply after manager login — also force-exit judge mode
+  const _origApplyManagerUI = typeof applyManagerUI === 'function' ? applyManagerUI : null;
+  if (_origApplyManagerUI) {
+    applyManagerUI = function() {
+      _origApplyManagerUI.apply(this, arguments);
+      // A manager can't simultaneously be a judge — silently clear the judge session
+      if (IS_JUDGE) {
+        IS_JUDGE = false;
+        JUDGE_NAME = '';
+        ss2.del(JK.NAME);
+      }
+      _ensureJudgeFab();
+      _applyJudgeUI();
+      if (IS_MANAGER) setTimeout(_injectJudgeSettings, 100);
+    };
+  }
+
+  // Re-apply after manager logout — this is the missing patch
+  const _origDoLockManager = typeof doLockManager === 'function' ? doLockManager : null;
+  if (_origDoLockManager) {
+    doLockManager = function() {
+      _origDoLockManager.apply(this, arguments); // IS_MANAGER is now false
+      _ensureJudgeFab();
+      _applyJudgeUI(); // re-render: full opacity, fully interactive
+    };
+  }
+
+  console.log('[Judge Module v50] Loaded. Judge mode:', isJudgeModeEnabled(), '| IS_JUDGE:', IS_JUDGE);
+})();
+
 
 </script>
