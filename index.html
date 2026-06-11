@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://api.qrserver.com; connect-src 'self' https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Live Voting — Funkytown Showcase 2026 v51</title>
+  <title>Live Voting — Funkytown Showcase 2026 v52</title>
   <meta name="description" content="Live audience voting for Funkytown Showcase 2026 — score your favourite acts in real time.">
   <meta name="theme-color" content="#080808">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1279,7 +1279,26 @@
     .acp-send:hover{background:rgba(232,193,74,0.1);}
     .acp-send:disabled{opacity:0.4;cursor:default;}
     .acp-limit{font-size:0.65rem;color:var(--muted);text-align:center;padding:0 14px 6px;letter-spacing:0.05em;flex-shrink:0;}
-    /* ── end v50 audience chat ───────────────────────────────────────────── */
+    /* ── v52: Live device presence pill ─────────────────────────────────── */
+    #presencePill{display:none;align-items:center;gap:7px;padding:4px 11px;
+      background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.25);
+      border-radius:2px;font-size:0.7rem;color:var(--green);letter-spacing:0.14em;
+      text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
+    #presencePill.visible{display:flex;}
+    #presencePill .pp-dot{width:6px;height:6px;border-radius:50%;background:var(--green);
+      box-shadow:0 0 5px var(--green);animation:pulseDot 1.4s ease-in-out infinite;flex-shrink:0;}
+    /* ── v52: Firebase connection status indicator (audience) ───────────── */
+    #fbConnStatus{display:none;position:fixed;bottom:calc(130px + var(--safe-bottom));
+      right:calc(14px + var(--safe-right));z-index:9001;padding:5px 11px;
+      font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;
+      background:var(--surface);border:1px solid var(--border);border-radius:2px;
+      color:var(--muted);opacity:0.85;pointer-events:none;}
+    #fbConnStatus.connected{color:var(--green);border-color:rgba(74,222,128,0.3);}
+    #fbConnStatus.reconnecting{color:var(--amber);border-color:rgba(245,158,11,0.3);
+      animation:pulseDot 1s ease-in-out infinite;}
+    body.audience-mode #fbConnStatus{display:block;}
+    /* ── v52: chat send disabled state for offline ──────────────────────── */
+    .ims-chat-send:disabled,.acp-send:disabled{opacity:0.35;cursor:not-allowed;}
     .reaction-btn{width:52px;height:52px;background:var(--surface);border:1px solid var(--border);border-radius:50%;font-size:1.5rem;cursor:pointer;transition:transform 0.15s;touch-action:manipulation;display:flex;align-items:center;justify-content:center;}
     .reaction-btn:active{transform:scale(0.88);}
     .reaction-float{position:fixed;pointer-events:none;font-size:2rem;animation:reactionFloat 1.8s ease-out forwards;z-index:1600;}
@@ -1864,6 +1883,8 @@
 <button id="psbRestoreBtn" type="button" aria-label="Restore status bar">&#8963; Status</button>
 <div id="offlineBar" role="alert" aria-live="assertive"></div>
 <div id="syncModeBar" role="status"></div>
+<!-- v52: Firebase real-time connection status indicator (audience only) -->
+<div id="fbConnStatus" role="status" aria-live="polite"></div>
 <!-- v50: audience-friendly sync note (shows only when Firebase is unavailable) -->
 <div id="audienceSyncNote" role="status" aria-live="polite"></div>
 <!-- v50: reaction feed — chips above reaction tray -->
@@ -2311,6 +2332,11 @@
       <div class="sfp-title">
         <div class="sfp-dot" id="sfpDot" aria-hidden="true"></div>
         <span id="sfpTitleText">Show Control &mdash; Ready</span>
+        <!-- v52: live device presence pill -->
+        <div id="presencePill" aria-live="polite" aria-label="Connected devices">
+          <div class="pp-dot" aria-hidden="true"></div>
+          <span id="presenceCount">0</span>&nbsp;LIVE
+        </div>
       </div>
       <div class="sfp-actions" role="group" aria-label="Show controls">
         <button class="ctrl-btn" id="exportBtn" type="button">&#128229; CSV</button>
@@ -3066,9 +3092,10 @@ const c=type==='ok'?'var(--green)':type==='err'?'var(--red)':type==='info'?'var(
 //   "rules": {
 //     "events": {
 //       "$eventCode": {
-//         "votes":   { ".read": true, ".write": "auth != null" },
-//         "control": { ".read": true, ".write": "auth != null" },
-//         "chat":    { ".read": true, ".write": "auth != null" }
+//         "votes":    { ".read": true, ".write": "auth != null" },
+//         "control":  { ".read": true, ".write": "auth != null" },
+//         "chat":     { ".read": true, ".write": "auth != null" },
+//         "presence": { ".read": true, ".write": "auth != null" }
 //       }
 //     }
 //   }
@@ -3098,6 +3125,8 @@ let _fbUnsubVotes = null;
 let _fbUnsubCtrl = null;
 let _fbChatRef = null;       // DB ref for ephemeral chat (v49)
 let _fbChatUnsub = null;     // detach function for chat listener
+let _fbPresenceRef = null;   // v52: DB ref for this device's presence entry
+let _fbConnectedRef = null;  // v52: .info/connected listener ref
 
 async function _initFirebase() {
   if (!_fbConfigured) {
@@ -3121,6 +3150,31 @@ async function _initFirebase() {
     _fbVotesRef = _fbDB.ref('events/' + eventCode + '/votes');
     _fbCtrlRef  = _fbDB.ref('events/' + eventCode + '/control');
     _fbChatRef  = _fbDB.ref('events/' + eventCode + '/chat');   // v49: ephemeral chat
+
+    // v52: Presence tracking — each device writes its own entry under
+    // events/{eventCode}/presence/{uid}; entry is removed on disconnect.
+    // Manager subscribes to the full presence list to count connected devices.
+    const _uid = (_fbAuth.currentUser && _fbAuth.currentUser.uid) || ('anon-' + Date.now());
+    _fbPresenceRef = _fbDB.ref('events/' + eventCode + '/presence/' + _uid);
+    // onDisconnect removes this device's entry as soon as the socket closes
+    _fbPresenceRef.onDisconnect().remove();
+    // Write device entry immediately (role + joined timestamp)
+    const _deviceRole = (typeof IS_MANAGER !== 'undefined' && IS_MANAGER) ? 'manager' : 'audience';
+    _fbPresenceRef.set({ role: _deviceRole, joined: Date.now() }).catch(() => {});
+
+    // v52: .info/connected — Firebase built-in signal for real-time connection state.
+    // Audience devices use this to show a "Syncing…" / "Live" badge.
+    // Manager uses it to know Firebase is healthy.
+    _fbConnectedRef = _fbDB.ref('.info/connected');
+    _fbConnectedRef.on('value', snap => {
+      const connected = !!snap.val();
+      _onFbConnectionChange(connected);
+      if (connected) {
+        // Re-register onDisconnect each time we (re)connect (Firebase requires this)
+        _fbPresenceRef.onDisconnect().remove();
+        _fbPresenceRef.set({ role: (typeof IS_MANAGER !== 'undefined' && IS_MANAGER) ? 'manager' : 'audience', joined: Date.now() }).catch(() => {});
+      }
+    });
 
     // Expose dataSdk shim so existing HAS_SDK code works unchanged
     window.dataSdk = _buildFirebaseDataSdk();
@@ -3220,6 +3274,14 @@ function _buildFirebaseDataSdk() {
       });
       _fbUnsubVotes = () => _fbVotesRef.off('value', votesListener);
       _fbUnsubCtrl  = () => _fbCtrlRef.off('value', ctrlListener);
+
+      // v52: Manager subscribes to live presence list so the pill count stays current
+      const eventCode = (localStorage.getItem('ft_event_code') || 'FUNKY2026').toUpperCase();
+      const presenceListRef = _fbDB.ref('events/' + eventCode + '/presence');
+      presenceListRef.on('value', snap => {
+        const count = snap.numChildren ? snap.numChildren() : 0;
+        _updatePresencePill(count);
+      });
     },
     unsubscribe() {
       if (_fbUnsubVotes) _fbUnsubVotes();
@@ -3231,6 +3293,37 @@ function _buildFirebaseDataSdk() {
 // NOTE: HAS_SDK is set to true after _initFirebase() runs and window.dataSdk is populated.
 // It starts false and is updated by bootApp() once Firebase (or any SDK) is confirmed ready.
 let HAS_SDK=typeof window!=='undefined'&&!!window.dataSdk;
+
+// v52: update the manager-side live device presence pill
+function _updatePresencePill(count) {
+  const pill = document.getElementById('presencePill');
+  const countEl = document.getElementById('presenceCount');
+  if (!pill || !countEl) return;
+  if (!IS_MANAGER) { pill.classList.remove('visible'); return; }
+  countEl.textContent = String(count);
+  pill.classList.toggle('visible', count > 0);
+  pill.title = count + ' device' + (count !== 1 ? 's' : '') + ' connected to ' + (localStorage.getItem('ft_event_code') || 'FUNKY2026').toUpperCase();
+}
+
+// v52: handle Firebase .info/connected changes — updates audience connection badge
+// and re-registers onDisconnect so presence entry is always cleaned up on drop
+function _onFbConnectionChange(connected) {
+  const badge = document.getElementById('fbConnStatus');
+  if (badge) {
+    if (connected) {
+      badge.textContent = '● SYNCING LIVE';
+      badge.className = 'connected';
+    } else {
+      badge.textContent = '⟳ RECONNECTING';
+      badge.className = 'reconnecting';
+    }
+  }
+  // Re-update role on presence entry when manager logs in after Firebase init
+  if (connected && _fbPresenceRef) {
+    const role = (typeof IS_MANAGER !== 'undefined' && IS_MANAGER) ? 'manager' : 'audience';
+    _fbPresenceRef.set({ role, joined: Date.now() }).catch(() => {});
+  }
+}
 function _showSyncModeBanner(){
   if(HAS_SDK)return;
   const bar=$('syncModeBar');if(!bar)return;
@@ -3411,6 +3504,8 @@ function startSessionCountdown(){if(sessionCountdownInterval)clearInterval(sessi
 
 let _authInProgress=false;
 async function requestManagerAccess(){if(_authInProgress)return;_authInProgress=true;const fab=$('managerAccessBtn');if(fab)fab.style.pointerEvents='none';let ok=false;try{ok=await showAuthOverlay();}finally{_authInProgress=false;if(fab)fab.style.pointerEvents='';}if(!ok)return;createSession();IS_MANAGER=true;applyManagerUI();startSessionCountdown();showToast('Manager access granted','ok');_auditLog('manager_login');
+  // v52: update this device's presence role to 'manager' so count reflects role correctly
+  if(typeof _fbPresenceRef!=='undefined'&&_fbPresenceRef)_fbPresenceRef.update({role:'manager'}).catch(()=>{});
   // FIX#10: duplicate PIN toast removed — checkFirstLoginPinWarn() shows pinWarnModal at 800ms
 }
 
@@ -3526,6 +3621,8 @@ function bankShowClock(){
 function doLockManager(){
   clearSession();IS_MANAGER=false;previewMode=false;
   _auditLog('manager_logout');
+  // v52: revert presence role to 'audience' on logout
+  if(typeof _fbPresenceRef!=='undefined'&&_fbPresenceRef)_fbPresenceRef.update({role:'audience'}).catch(()=>{});
   if(sessionCountdownInterval){clearInterval(sessionCountdownInterval);sessionCountdownInterval=null;}
   // Close any manager-only modals/bars that may be open
   ['setListModal','historyModal','historyClearConfirmModal','changePinModal','pinWarnModal'].forEach(function(id){var el=$(id);if(el)el.classList.remove('open');});
@@ -9054,7 +9151,7 @@ _initV16Patches();
     };
   }
 
-  console.log('[Judge Module v51] Loaded. Judge mode:', isJudgeModeEnabled(), '| IS_JUDGE:', IS_JUDGE);
+  console.log('[Judge Module v52] Loaded. Judge mode:', isJudgeModeEnabled(), '| IS_JUDGE:', IS_JUDGE);
 })();
 
 
